@@ -50,7 +50,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           setUser(session.user);
           setEmailVerified(!!session.user.email_confirmed_at);
-          await fetchUserProfile(session.user.id, session.user.email || '');
+          try {
+            await fetchUserProfile(session.user.id, session.user.email || '');
+          } finally {
+            setLoading(false);
+            setInitialized(true);
+          }
         }
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -165,9 +170,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    const prevUser = user;
+    const prevProfile = profile;
     setUser(null);
     setProfile(null);
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      toast.error('Sign out failed. Please try again.');
+      setUser(prevUser);
+      setProfile(prevProfile);
+    }
   };
 
   const resendVerificationEmail = async () => {
