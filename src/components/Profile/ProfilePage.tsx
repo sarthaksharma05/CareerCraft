@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { User, Camera, Save, Instagram, Youtube, Twitter, Linkedin, BookText as TikTok, Globe, Users, Crown, Edit3, Upload } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
+import { supabase } from '../../lib/supabase';
 
 interface ProfileFormData {
   full_name: string;
@@ -24,6 +25,8 @@ export function ProfilePage() {
   const { profile, updateProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState(profile?.avatar_url || '');
+  const [uploading, setUploading] = useState(false);
   
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ProfileFormData>({
     defaultValues: {
@@ -48,6 +51,13 @@ export function ProfilePage() {
     { key: 'linkedin', label: 'LinkedIn', icon: Linkedin, color: 'text-blue-600' },
     { key: 'tiktok', label: 'TikTok', icon: TikTok, color: 'text-black' },
     { key: 'website', label: 'Website', icon: Globe, color: 'text-gray-600' },
+  ];
+
+  const staticAvatars = [
+    '/ava2.jpg',
+    '/ava3.jpg',
+    '/ava4.jpg',
+    '/ava5.jpg',
   ];
 
   const onSubmit = async (data: ProfileFormData) => {
@@ -114,6 +124,34 @@ export function ProfilePage() {
     visible: { opacity: 1, y: 0 }
   };
 
+  // Handle avatar upload
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const filePath = `avatars/${profile.id}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      setAvatarPreview(data.publicUrl);
+      await updateProfile({ avatar_url: data.publicUrl });
+      toast.success('Profile photo updated!');
+    } catch (err) {
+      toast.error('Failed to upload photo');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Handle static avatar selection
+  const handleStaticAvatar = async (url: string) => {
+    setAvatarPreview(url);
+    await updateProfile({ avatar_url: url });
+    toast.success('Avatar updated!');
+  };
+
   return (
     <motion.div 
       className="space-y-6"
@@ -135,16 +173,21 @@ export function ProfilePage() {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                  <User className="h-10 w-10 text-white" />
+                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm overflow-hidden">
+                  {avatarPreview ? (
+                    <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="h-10 w-10 text-white" />
+                  )}
                 </div>
-                <motion.button 
-                  className="absolute -bottom-1 -right-1 p-2 bg-white text-primary-600 rounded-full shadow-lg"
+                <motion.label 
+                  className="absolute -bottom-1 -right-1 p-2 bg-white text-primary-600 rounded-full shadow-lg cursor-pointer"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Camera className="h-4 w-4" />
-                </motion.button>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={uploading} />
+                </motion.label>
               </motion.div>
               <div>
                 <h1 className="text-2xl font-bold">{profile?.full_name || 'Your Name'}</h1>
@@ -194,6 +237,38 @@ export function ProfilePage() {
           variants={itemVariants}
           layout
         >
+          {/* Avatar/Photo selection UI */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo or Avatar</label>
+            <div className="flex items-center space-x-4 mb-2">
+              <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-300 flex items-center justify-center bg-gray-100">
+                {avatarPreview ? (
+                  <img src={avatarPreview} alt="Avatar Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="h-8 w-8 text-gray-400" />
+                )}
+              </div>
+              <label className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:from-primary-600 hover:to-secondary-600 transition-all">
+                <Upload className="h-4 w-4 inline mr-2" />Upload Photo
+                <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={uploading} />
+              </label>
+            </div>
+            <div className="mt-2">
+              <span className="block text-xs text-gray-500 mb-1">Or choose a cartoon avatar:</span>
+              <div className="flex space-x-2">
+                {staticAvatars.map((url) => (
+                  <button
+                    key={url}
+                    type="button"
+                    className={`w-12 h-12 rounded-full border-2 ${avatarPreview === url ? 'border-primary-500' : 'border-gray-200'} overflow-hidden focus:outline-none`}
+                    onClick={() => handleStaticAvatar(url)}
+                  >
+                    <img src={url} alt="Avatar" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <motion.div variants={itemVariants}>
