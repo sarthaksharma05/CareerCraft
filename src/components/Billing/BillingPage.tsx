@@ -189,6 +189,33 @@ export function BillingPage() {
     visible: { opacity: 1, y: 0 }
   };
 
+  // Get subscription badge color and text
+  const getSubscriptionBadge = () => {
+    if (!profile) return null;
+    
+    if (profile.subscription_tier === 'studio') {
+      return {
+        text: 'Studio Member',
+        bgColor: 'bg-gradient-to-r from-blue-500 to-blue-600',
+        textColor: 'text-white'
+      };
+    } else if (profile.subscription_tier === 'pro') {
+      return {
+        text: 'Pro Member',
+        bgColor: 'bg-gradient-to-r from-purple-500 to-pink-500',
+        textColor: 'text-white'
+      };
+    } else {
+      return {
+        text: 'Free Plan',
+        bgColor: 'bg-gray-200',
+        textColor: 'text-gray-700'
+      };
+    }
+  };
+
+  const subscriptionBadge = getSubscriptionBadge();
+
   return (
     <motion.div 
       className="space-y-6"
@@ -246,11 +273,11 @@ export function BillingPage() {
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">Current Plan</h3>
-              {profile?.subscription_tier !== 'free' && (
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 rounded-full">
-                  <Crown className="h-4 w-4 text-purple-600" />
-                  <span className="text-sm font-medium text-purple-700">
-                    {profile?.subscription_tier === 'pro' ? 'Pro' : 'Studio'} Member
+              {profile?.subscription_tier !== 'free' && subscriptionBadge && (
+                <div className={`flex items-center space-x-2 ${subscriptionBadge.bgColor} px-3 py-1 rounded-full`}>
+                  <Crown className="h-4 w-4 text-white" />
+                  <span className="text-sm font-medium text-white">
+                    {subscriptionBadge.text}
                   </span>
                 </div>
               )}
