@@ -45,7 +45,6 @@ export function Header({ onMenuClick }: HeaderProps) {
     { name: 'Billing', path: '/app/billing' },
     { name: 'Analytics', path: '/app/analytics' },
     { name: 'Settings', path: '/app/settings' },
-    { name: 'Upgrade', path: '/app/upgrade' },
     { name: 'Dashboard', path: '/app/dashboard' },
   ];
 
@@ -108,14 +107,6 @@ export function Header({ onMenuClick }: HeaderProps) {
       isExternal: false
     },
     {
-      icon: Crown,
-      label: 'Upgrade to Pro',
-      href: '/app/upgrade',
-      description: 'Unlock all features',
-      highlight: !profile?.is_pro,
-      isExternal: false
-    },
-    {
       icon: CreditCard,
       label: 'Billing & Plans',
       href: '/app/billing',
@@ -144,6 +135,18 @@ export function Header({ onMenuClick }: HeaderProps) {
       isExternal: false
     }
   ];
+
+  // Only show upgrade option for free users
+  if (!profile?.is_pro) {
+    dropdownItems.splice(2, 0, {
+      icon: Crown,
+      label: 'Upgrade to Pro',
+      href: '/app/upgrade',
+      description: 'Unlock all features',
+      highlight: true,
+      isExternal: false
+    });
+  }
 
   // Get display name - prioritize full_name, fallback to email prefix, then 'User'
   const getDisplayName = () => {

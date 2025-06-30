@@ -668,41 +668,43 @@ export function Dashboard() {
         </motion.div>
       </div>
 
-      {/* Quick Start Guide */}
-      <motion.div 
-        className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200"
-        variants={itemVariants}
-      >
-        <div className="flex items-start space-x-4">
-          <div className="flex-shrink-0">
-            <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <Zap className="h-6 w-6 text-white" />
-            </div>
-          </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              New to CreatorCopilot? Start here!
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Follow these steps to get the most out of your AI-powered creator toolkit.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
-                <span className="text-sm text-gray-700">Complete your profile</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
-                <span className="text-sm text-gray-700">Generate your first content</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
-                <span className="text-sm text-gray-700">Explore brand campaigns</span>
+      {/* Quick Start Guide - Only show for free users */}
+      {!profile?.is_pro && (
+        <motion.div 
+          className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200"
+          variants={itemVariants}
+        >
+          <div className="flex items-start space-x-4">
+            <div className="flex-shrink-0">
+              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                <Zap className="h-6 w-6 text-white" />
               </div>
             </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                New to CreatorCopilot? Start here!
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Follow these steps to get the most out of your AI-powered creator toolkit.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
+                  <span className="text-sm text-gray-700">Complete your profile</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
+                  <span className="text-sm text-gray-700">Generate your first content</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs font-bold">3</div>
+                  <span className="text-sm text-gray-700">Explore brand campaigns</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
