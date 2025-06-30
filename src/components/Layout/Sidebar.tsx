@@ -205,9 +205,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               transition={{ delay: 0.2 }}
             >
               <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-medium shadow-sm">
-                  {profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'U'}
-                </div>
+                {profile.avatar_url ? (
+                  <img src={profile.avatar_url} alt="Avatar" className="h-10 w-10 rounded-full object-cover border border-gray-200" />
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-medium shadow-sm">{profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'U'}</div>
+                )}
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-gray-900 truncate">
                     {profile.full_name || profile.email?.split('@')[0] || 'User'}

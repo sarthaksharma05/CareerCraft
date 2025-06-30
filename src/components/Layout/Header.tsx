@@ -248,7 +248,7 @@ export function Header({ onMenuClick }: HeaderProps) {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Menu className="h-5 w-5 text-gray-700" style={{ zIndex: 9999999 }} />
+            <Menu className="h-5 w-5 text-gray-700" style={{ zIndex: 999999 }} />
           </motion.button>
           
           <div className="hidden md:flex items-center space-x-4">
@@ -360,16 +360,11 @@ export function Header({ onMenuClick }: HeaderProps) {
                 )}
               </motion.div>
               
-              <motion.div
-                className="h-8 w-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-medium shadow-sm"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.4, type: "spring", stiffness: 300 }}
-              >
-                {getInitials()}
-              </motion.div>
+              {profile?.avatar_url ? (
+                <img src={profile.avatar_url} alt="Avatar" className="h-8 w-8 rounded-full object-cover border border-gray-200" />
+              ) : (
+                <motion.div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-medium shadow-sm">{getInitials()}</motion.div>
+              )}
 
               <motion.div
                 animate={{ rotate: showDropdown ? 180 : 0 }}
@@ -411,9 +406,11 @@ export function Header({ onMenuClick }: HeaderProps) {
                     {/* User Info Header */}
                     <div className="px-4 py-3 border-b border-gray-100 bg-gradient-to-r from-primary-50/80 to-secondary-50/80">
                       <div className="flex items-center space-x-3">
-                        <div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-medium shadow-lg">
-                          {getInitials()}
-                        </div>
+                        {profile?.avatar_url ? (
+                          <img src={profile.avatar_url} alt="Avatar" className="h-12 w-12 rounded-full object-cover border border-gray-200" />
+                        ) : (
+                          <div className="h-12 w-12 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-medium shadow-lg">{getInitials()}</div>
+                        )}
                         <div className="flex-1">
                           <p className="text-sm font-semibold text-gray-900">
                             {getDisplayName()}
