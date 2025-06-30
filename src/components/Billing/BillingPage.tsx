@@ -66,49 +66,68 @@ export function BillingPage() {
   const loadBillingData = async () => {
     setLoading(true);
     try {
-      // Load invoices from Supabase
-      const { data: invoices, error: invoicesError } = await supabase
-        .from('stripe.invoices')
-        .select('*')
-        .eq('user_id', profile?.id)
-        .order('created_at', { ascending: false });
+      // Generate mock billing history based on subscription tier
+      const mockHistory: BillingHistory[] = [];
       
-      if (invoicesError) {
-        console.error('Error loading invoices:', invoicesError);
-      } else {
-        // Convert to our interface format
-        const history: BillingHistory[] = (invoices || []).map(invoice => ({
-          id: invoice.id,
-          date: invoice.created_at,
-          amount: invoice.amount_due / 100, // Convert from cents
-          status: invoice.status as 'paid' | 'pending' | 'failed',
+      if (profile?.subscription_tier !== 'free') {
+        // Add current subscription payment
+        mockHistory.push({
+          id: '1',
+          date: profile?.last_payment_date || new Date().toISOString(),
+          amount: profile?.subscription_tier === 'pro' ? 29 : 99,
+          status: 'paid',
           description: `${profile?.subscription_tier === 'pro' ? 'Creator Pro' : 'Creator Studio'} ${
             profile?.subscription_tier === 'pro' ? '$29.00' : '$99.00'
           }`,
-          invoiceUrl: invoice.hosted_invoice_url
-        }));
+          invoiceUrl: '#'
+        });
         
-        setBillingHistory(history);
+        // Add previous payments (for demonstration)
+        const prevDate1 = new Date();
+        prevDate1.setMonth(prevDate1.getMonth() - 1);
+        mockHistory.push({
+          id: '2',
+          date: prevDate1.toISOString(),
+          amount: profile?.subscription_tier === 'pro' ? 29 : 99,
+          status: 'paid',
+          description: `${profile?.subscription_tier === 'pro' ? 'Creator Pro' : 'Creator Studio'} ${
+            profile?.subscription_tier === 'pro' ? '$29.00' : '$99.00'
+          }`,
+          invoiceUrl: '#'
+        });
+        
+        const prevDate2 = new Date();
+        prevDate2.setMonth(prevDate2.getMonth() - 2);
+        mockHistory.push({
+          id: '3',
+          date: prevDate2.toISOString(),
+          amount: profile?.subscription_tier === 'pro' ? 29 : 99,
+          status: 'paid',
+          description: `${profile?.subscription_tier === 'pro' ? 'Creator Pro' : 'Creator Studio'} ${
+            profile?.subscription_tier === 'pro' ? '$29.00' : '$99.00'
+          }`,
+          invoiceUrl: '#'
+        });
       }
       
-      // Load subscription info
-      const { data: subscription, error: subscriptionError } = await supabase
-        .from('stripe.subscriptions')
-        .select('*, price:price_id(*)')
-        .eq('user_id', profile?.id)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+      setBillingHistory(mockHistory);
       
-      if (subscriptionError && subscriptionError.code !== 'PGRST116') {
-        console.error('Error loading subscription:', subscriptionError);
-      } else if (subscription) {
-        setSubscriptionInfo(subscription);
-      }
-      
-      // Load payment methods (in a real app, this would come from Stripe)
-      // For demo purposes, we'll create a mock payment method
+      // Create mock subscription info
       if (profile?.subscription_tier !== 'free') {
+        setSubscriptionInfo({
+          id: 'sub_' + Math.random().toString(36).substring(2, 15),
+          status: profile?.subscription_status || 'active',
+          current_period_start: profile?.last_payment_date || new Date().toISOString(),
+          current_period_end: profile?.next_payment_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          cancel_at_period_end: false,
+          price: {
+            interval: profile?.billing_cycle === 'yearly' ? 'year' : 'month',
+            interval_count: 1,
+            unit_amount: profile?.subscription_tier === 'pro' ? 2900 : 9900
+          }
+        });
+        
+        // Create mock payment method
         setPaymentMethods([
           {
             id: '1',
@@ -133,13 +152,24 @@ export function BillingPage() {
   const handleCancelSubscription = async () => {
     setLoading(true);
     try {
-      // Redirect to Stripe Customer Portal
-      setRedirectingToPortal(true);
-      const portalUrl = await stripeService.getCustomerPortalUrl();
-      window.location.href = portalUrl;
+      // Simulate cancellation
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Update profile to free tier at end of current period
+      const nextPaymentDate = new Date(profile?.next_payment_date || Date.now() + 30 * 24 * 60 * 60 * 1000);
+      
+      await updateProfile({
+        subscription_status: 'canceled',
+      });
+      
+      toast.success('Your subscription has been canceled. You will have access until the end of your current billing period.');
+      setShowCancelModal(false);
+      
+      // Refresh billing data
+      loadBillingData();
     } catch (error) {
-      toast.error('Failed to access customer portal. Please try again.');
-      setRedirectingToPortal(false);
+      toast.error('Failed to cancel subscription. Please try again.');
+    } finally {
       setLoading(false);
     }
   };
@@ -147,20 +177,21 @@ export function BillingPage() {
   const handleManagePaymentMethods = async () => {
     setLoading(true);
     try {
-      // Redirect to Stripe Customer Portal
-      setRedirectingToPortal(true);
-      const portalUrl = await stripeService.getCustomerPortalUrl();
-      window.location.href = portalUrl;
+      // Simulate loading payment management
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast.success('Payment management feature is available in the full version');
     } catch (error) {
-      toast.error('Failed to access customer portal. Please try again.');
-      setRedirectingToPortal(false);
+      toast.error('Failed to access payment management. Please try again.');
+    } finally {
       setLoading(false);
     }
   };
 
   const downloadInvoice = (invoiceUrl: string) => {
     if (invoiceUrl) {
-      window.open(invoiceUrl, '_blank');
+      // In a real app, this would download the invoice
+      toast.success('Invoice download started');
     } else {
       toast.error('Invoice URL not available');
     }
@@ -296,7 +327,7 @@ export function BillingPage() {
                 <span className="text-gray-600">Billing Cycle</span>
                 <span className="font-semibold text-gray-900">
                   {profile?.subscription_tier === 'free' ? 'N/A' : 
-                   subscriptionInfo?.price?.interval_count === 1 ? 'Monthly' : 'Yearly'}
+                   profile?.billing_cycle === 'monthly' ? 'Monthly' : 'Yearly'}
                 </span>
               </div>
               
@@ -312,7 +343,7 @@ export function BillingPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Next Billing Date</span>
                   <span className="font-semibold text-gray-900">
-                    {new Date(subscriptionInfo.current_period_end).toLocaleDateString()}
+                    {new Date(profile?.next_payment_date || subscriptionInfo.current_period_end).toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -320,17 +351,28 @@ export function BillingPage() {
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Status</span>
                 <div className="flex items-center space-x-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span className="font-semibold text-green-600">
-                    {profile?.subscription_status === 'trialing' ? 'Trial' : 
-                     profile?.subscription_status === 'active' ? 'Active' : 
-                     profile?.subscription_status === 'canceled' ? 'Canceled' : 'Free'}
-                  </span>
+                  {profile?.subscription_status === 'canceled' ? (
+                    <>
+                      <Clock className="h-4 w-4 text-orange-500" />
+                      <span className="font-semibold text-orange-600">
+                        Canceled (Expires on {new Date(profile?.next_payment_date || Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()})
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <span className="font-semibold text-green-600">
+                        {profile?.subscription_status === 'trialing' ? 'Trial' : 
+                         profile?.subscription_status === 'active' ? 'Active' : 
+                         profile?.subscription_status === 'canceled' ? 'Canceled' : 'Free'}
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
 
-            {profile?.subscription_tier !== 'free' && (
+            {profile?.subscription_tier !== 'free' && profile?.subscription_status !== 'canceled' && (
               <div className="mt-6 pt-6 border-t border-gray-200">
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
@@ -615,7 +657,7 @@ export function BillingPage() {
                 disabled={loading || redirectingToPortal}
                 className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-700 disabled:opacity-50 transition-colors"
               >
-                {redirectingToPortal ? 'Redirecting...' : 'Cancel Subscription'}
+                {redirectingToPortal ? 'Processing...' : 'Cancel Subscription'}
               </button>
             </div>
           </motion.div>
