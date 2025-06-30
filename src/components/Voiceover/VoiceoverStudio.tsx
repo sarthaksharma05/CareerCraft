@@ -285,6 +285,22 @@ export function VoiceoverStudio() {
       return;
     }
 
+    // Check for MP3 support before playing
+    const testAudio = document.createElement('audio');
+    if (!testAudio.canPlayType('audio/mpeg')) {
+      toast.error('Your browser does not support MP3 audio. Please download the file to play it locally.');
+      if (url) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${title || 'voiceover'}.mp3`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      return;
+    }
+
     try {
       console.log('🎵 Attempting to play audio:', url.substring(0, 50) + '...');
       
@@ -315,19 +331,16 @@ export function VoiceoverStudio() {
 
       audio.addEventListener('error', (e) => {
         console.error('❌ Audio error event:', e);
-        
         // Get detailed error information with proper null checks
         const target = e.target as HTMLAudioElement;
         if (target && target.error) {
           const errorCode = target.error.code;
           const errorMessage = target.error.message || 'Unknown audio error';
-          
           console.error('❌ Audio error details:', {
             code: errorCode,
             message: errorMessage,
             src: target.src
           });
-          
           // Map error codes to user-friendly messages
           let userMessage = 'Failed to load audio';
           switch (errorCode) {
@@ -341,16 +354,18 @@ export function VoiceoverStudio() {
               userMessage = 'Audio file is corrupted or format not supported';
               break;
             case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
-              userMessage = 'Audio format not supported by your browser';
+              // Suppress this error on the frontend, only log it
+              userMessage = null;
               break;
           }
-          
-          toast.error(userMessage);
+          // Only show toast if userMessage is not null and not the suppressed error
+          if (userMessage) {
+            toast.error(userMessage);
+          }
         } else {
           console.error('❌ Audio error without detailed information:', e);
           toast.error('Failed to load audio. Please try generating again.');
         }
-        
         setIsPlaying(false);
       });
 
@@ -904,3 +919,5 @@ export function VoiceoverStudio() {
     </div>
   );
 }
+
+export default VoiceoverStudio;
