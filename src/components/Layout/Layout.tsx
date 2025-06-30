@@ -22,7 +22,7 @@ export function Layout() {
             width: '100%'
           }}
         >
-          <Header onMenuClick={() => setSidebarOpen(true)} />
+          <Header onMenuClick={() => setSidebarOpen((open) => !open)} />
         </div>
         
         {/* Main content - Full width always */}
