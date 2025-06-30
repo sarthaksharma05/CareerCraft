@@ -168,6 +168,33 @@ export function Header({ onMenuClick }: HeaderProps) {
     return name.charAt(0).toUpperCase();
   };
 
+  // Get subscription badge color and text
+  const getSubscriptionBadge = () => {
+    if (!profile) return null;
+    
+    if (profile.subscription_tier === 'studio') {
+      return {
+        text: 'Studio',
+        bgColor: 'bg-gradient-to-r from-blue-500 to-cyan-500',
+        textColor: 'text-white'
+      };
+    } else if (profile.subscription_tier === 'pro') {
+      return {
+        text: 'Pro',
+        bgColor: 'bg-gradient-to-r from-purple-500 to-pink-500',
+        textColor: 'text-white'
+      };
+    } else {
+      return {
+        text: 'Free Plan',
+        bgColor: 'bg-gray-200',
+        textColor: 'text-gray-700'
+      };
+    }
+  };
+
+  const subscriptionBadge = getSubscriptionBadge();
+
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && filteredPages.length > 0) {
       navigate(filteredPages[0].path);
@@ -322,9 +349,12 @@ export function Header({ onMenuClick }: HeaderProps) {
                 <p className="text-sm font-medium text-gray-900">
                   {getDisplayName()}
                 </p>
-                <p className="text-xs text-gray-500">
-                  {profile?.is_pro ? 'Pro Member' : 'Free Plan'}
-                </p>
+                {subscriptionBadge && (
+                  <div className={`flex items-center justify-center ${subscriptionBadge.bgColor} ${subscriptionBadge.textColor} text-xs px-2 py-0.5 rounded-full font-medium mt-1`}>
+                    {profile?.subscription_tier === 'pro' && <Crown className="h-3 w-3 mr-1" />}
+                    {subscriptionBadge.text}
+                  </div>
+                )}
               </motion.div>
               
               <motion.div
@@ -386,10 +416,15 @@ export function Header({ onMenuClick }: HeaderProps) {
                             {getDisplayName()}
                           </p>
                           <p className="text-xs text-gray-600">{profile?.email}</p>
-                          {profile?.is_pro ? (
+                          {profile?.subscription_tier === 'studio' ? (
                             <div className="flex items-center space-x-1 mt-1">
-                              <Crown className="h-3 w-3 text-yellow-500" />
-                              <span className="text-xs text-yellow-600 font-medium">Pro Member</span>
+                              <Crown className="h-3 w-3 text-blue-500" />
+                              <span className="text-xs text-blue-600 font-medium">Studio Member</span>
+                            </div>
+                          ) : profile?.subscription_tier === 'pro' ? (
+                            <div className="flex items-center space-x-1 mt-1">
+                              <Crown className="h-3 w-3 text-purple-500" />
+                              <span className="text-xs text-purple-600 font-medium">Pro Member</span>
                             </div>
                           ) : (
                             <div className="flex items-center space-x-1 mt-1">

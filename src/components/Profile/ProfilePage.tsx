@@ -25,7 +25,7 @@ export function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
-  const { register, handleSubmit, formState: { errors } } = useForm<ProfileFormData>({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<ProfileFormData>({
     defaultValues: {
       full_name: profile?.full_name || '',
       niche: profile?.niche || '',
@@ -69,6 +69,33 @@ export function ProfilePage() {
       setLoading(false);
     }
   };
+
+  // Get subscription badge color and text
+  const getSubscriptionBadge = () => {
+    if (!profile) return null;
+    
+    if (profile.subscription_tier === 'studio') {
+      return {
+        text: 'Studio Member',
+        bgColor: 'bg-gradient-to-r from-blue-500 to-cyan-500',
+        textColor: 'text-white'
+      };
+    } else if (profile.subscription_tier === 'pro') {
+      return {
+        text: 'Pro Member',
+        bgColor: 'bg-gradient-to-r from-purple-500 to-pink-500',
+        textColor: 'text-white'
+      };
+    } else {
+      return {
+        text: 'Free Plan',
+        bgColor: 'bg-gray-200',
+        textColor: 'text-gray-700'
+      };
+    }
+  };
+
+  const subscriptionBadge = getSubscriptionBadge();
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -139,15 +166,23 @@ export function ProfilePage() {
             </motion.button>
           </div>
           
-          {profile?.is_pro && (
+          {/* Subscription Badge */}
+          {subscriptionBadge && (
             <motion.div 
-              className="flex items-center space-x-2 bg-accent-500/20 backdrop-blur-sm px-3 py-1 rounded-full w-fit"
+              className={`inline-flex items-center space-x-2 ${subscriptionBadge.bgColor} ${subscriptionBadge.textColor} px-4 py-2 rounded-full backdrop-blur-sm`}
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <Crown className="h-4 w-4 text-accent-300" />
-              <span className="text-sm font-medium text-accent-100">Pro Member</span>
+              {profile?.subscription_tier !== 'free' && (
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                >
+                  <Crown className="h-4 w-4" />
+                </motion.div>
+              )}
+              <span className="font-medium">{subscriptionBadge.text}</span>
             </motion.div>
           )}
         </div>
@@ -330,17 +365,39 @@ export function ProfilePage() {
               whileHover={{ y: -2 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Type</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Subscription</h3>
               <div className="text-center">
-                {profile?.is_pro ? (
+                {profile?.subscription_tier === 'studio' ? (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: "spring", stiffness: 300 }}
+                    className="space-y-2"
                   >
-                    <Crown className="h-12 w-12 text-accent-500 mx-auto mb-2" />
-                    <p className="font-semibold text-accent-600">Pro Member</p>
+                    <div className="inline-flex p-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 mb-2">
+                      <Crown className="h-8 w-8 text-white" />
+                    </div>
+                    <p className="font-semibold text-xl text-blue-600">Studio Member</p>
                     <p className="text-sm text-gray-600">Unlimited access to all features</p>
+                    <div className="mt-2 p-2 bg-blue-50 rounded-lg text-blue-700 text-sm">
+                      <p>All premium features unlocked</p>
+                    </div>
+                  </motion.div>
+                ) : profile?.subscription_tier === 'pro' ? (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    className="space-y-2"
+                  >
+                    <div className="inline-flex p-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 mb-2">
+                      <Crown className="h-8 w-8 text-white" />
+                    </div>
+                    <p className="font-semibold text-xl text-purple-600">Pro Member</p>
+                    <p className="text-sm text-gray-600">Advanced features unlocked</p>
+                    <div className="mt-2 p-2 bg-purple-50 rounded-lg text-purple-700 text-sm">
+                      <p>Pro features unlocked</p>
+                    </div>
                   </motion.div>
                 ) : (
                   <div>
@@ -350,6 +407,7 @@ export function ProfilePage() {
                       className="mt-2 bg-gradient-to-r from-accent-500 to-primary-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-accent-600 hover:to-primary-600 transition-all"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      onClick={() => navigate('/app/upgrade')}
                     >
                       Upgrade to Pro
                     </motion.button>

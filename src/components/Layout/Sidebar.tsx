@@ -102,6 +102,33 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   const isDemoUser = localStorage.getItem('isDemoUser') === 'true';
 
+  // Get subscription badge color and text
+  const getSubscriptionBadge = () => {
+    if (!profile) return null;
+    
+    if (profile.subscription_tier === 'studio') {
+      return {
+        text: 'Studio',
+        bgColor: 'bg-gradient-to-r from-blue-500 to-cyan-500',
+        textColor: 'text-white'
+      };
+    } else if (profile.subscription_tier === 'pro') {
+      return {
+        text: 'Pro',
+        bgColor: 'bg-gradient-to-r from-purple-500 to-pink-500',
+        textColor: 'text-white'
+      };
+    } else {
+      return {
+        text: 'Free Plan',
+        bgColor: 'bg-gray-200',
+        textColor: 'text-gray-700'
+      };
+    }
+  };
+
+  const subscriptionBadge = getSubscriptionBadge();
+
   // Only render sidebar when it should be visible
   if (!isOpen) return null;
 
@@ -168,6 +195,36 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               )}
             </motion.div>
           </motion.div>
+
+          {/* User Profile Section */}
+          {profile && (
+            <motion.div
+              className="px-4 py-3 border-b border-gray-200"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className="flex items-center space-x-3">
+                <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-medium shadow-sm">
+                  {profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-900 truncate">
+                    {profile.full_name || profile.email?.split('@')[0] || 'User'}
+                  </p>
+                  <p className="text-xs text-gray-500 truncate">{profile.email}</p>
+                </div>
+              </div>
+              
+              {/* Subscription Badge */}
+              {subscriptionBadge && (
+                <div className={`mt-2 flex items-center justify-center ${subscriptionBadge.bgColor} ${subscriptionBadge.textColor} text-xs px-3 py-1 rounded-full font-medium`}>
+                  {profile.subscription_tier !== 'free' && <Crown className="h-3 w-3 mr-1" />}
+                  {subscriptionBadge.text}
+                </div>
+              )}
+            </motion.div>
+          )}
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto px-4 py-6">
@@ -240,25 +297,31 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             >
               <motion.div
                 className={`flex items-center space-x-2 rounded-lg px-3 py-2 ${
-                  profile.is_pro
-                    ? 'bg-gradient-to-r from-accent-500 to-primary-500 text-white'
+                  profile.subscription_tier === 'studio'
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
+                    : profile.subscription_tier === 'pro'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                     : 'bg-gray-100 text-gray-600'
                 }`}
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <motion.div
-                  animate={profile.is_pro ? { rotate: [0, 10, -10, 0] } : {}}
+                  animate={profile.subscription_tier !== 'free' ? { rotate: [0, 10, -10, 0] } : {}}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 >
                   <Crown className="h-5 w-5" />
                 </motion.div>
                 <span className="text-sm font-medium">
-                  {profile.is_pro ? 'Pro Member' : 'Free Plan'}
+                  {profile.subscription_tier === 'studio' 
+                    ? 'Studio Member' 
+                    : profile.subscription_tier === 'pro' 
+                    ? 'Pro Member' 
+                    : 'Free Plan'}
                 </span>
               </motion.div>
               
-              {!profile.is_pro && (
+              {profile.subscription_tier === 'free' && (
                 <NavLink to="/app/upgrade">
                   <motion.button 
                     className="w-full rounded-lg bg-gradient-to-r from-primary-500 to-secondary-500 px-3 py-2 text-sm font-medium text-white hover:from-primary-600 hover:to-secondary-600 transition-all shadow-sm"
