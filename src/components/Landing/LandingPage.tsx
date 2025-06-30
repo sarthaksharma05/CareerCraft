@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { 
   Sparkles, 
@@ -28,7 +28,101 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { SpiralAnimation } from '../ui/spiral-animation';
 import { AIChatWidget } from './AIChatWidget';
-import Spline from '@splinetool/react-spline';
+
+// Lazy load Spline component
+const Spline = React.lazy(() => import('@splinetool/react-spline'));
+
+// Spline Loading Component
+const SplineLoader = () => (
+  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-md rounded-2xl border border-white/20">
+    <div className="text-center">
+      <motion.div
+        className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full mx-auto mb-4"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+      />
+      <p className="text-white/80 text-sm">Loading 3D Experience...</p>
+    </div>
+  </div>
+);
+
+// Spline Error Boundary Component
+class SplineErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; fallback?: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Spline component error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || (
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-500/20 to-gray-600/20 backdrop-blur-md rounded-2xl border border-white/20">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Globe className="h-8 w-8 text-white/60" />
+            </div>
+            <p className="text-white/60 text-sm">3D Scene Unavailable</p>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
+// Safe Spline Component Wrapper
+const SafeSpline: React.FC<{ scene: string; className?: string }> = ({ scene, className }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  const handleLoad = () => {
+    console.log('Spline scene loaded successfully:', scene);
+    setIsLoaded(true);
+  };
+
+  const handleError = (error: any) => {
+    console.error('Spline scene error:', error);
+    setHasError(true);
+  };
+
+  if (hasError) {
+    return (
+      <div className={`flex items-center justify-center bg-gradient-to-br from-gray-500/20 to-gray-600/20 backdrop-blur-md rounded-2xl border border-white/20 ${className}`}>
+        <div className="text-center">
+          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Globe className="h-8 w-8 text-white/60" />
+          </div>
+          <p className="text-white/60 text-sm">3D Scene Unavailable</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <SplineErrorBoundary>
+      <Suspense fallback={<SplineLoader />}>
+        <Spline 
+          scene={scene}
+          className={className}
+          onLoad={handleLoad}
+          onError={handleError}
+        />
+      </Suspense>
+    </SplineErrorBoundary>
+  );
+};
 
 export function LandingPage() {
   const { isAuthenticated } = useAuth();
@@ -393,10 +487,9 @@ export function LandingPage() {
                   marginRight: '-20px'
                 }}
               >
-                <Spline 
+                <SafeSpline 
                   scene="https://prod.spline.design/f3eZokxGZiqDydOn/scene.splinecode"
-                  onLoad={() => console.log('Hero Spline scene loaded successfully')}
-                  onError={(error) => console.error('Hero Spline scene error:', error)}
+                  className="w-full h-full rounded-2xl"
                 />
               </motion.div>
             </div>
@@ -513,11 +606,9 @@ export function LandingPage() {
                 viewport={{ once: true }}
                 className="relative h-[500px] rounded-2xl overflow-hidden"
               >
-                <Spline 
+                <SafeSpline 
                   scene="https://prod.spline.design/bnMPTJ7gd0k0pKh1/scene.splinecode"
                   className="w-full h-full rounded-2xl"
-                  onLoad={() => console.log('Showcase Spline scene loaded successfully')}
-                  onError={(error) => console.error('Showcase Spline scene error:', error)}
                 />
               </motion.div>
 
