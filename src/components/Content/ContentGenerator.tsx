@@ -8,7 +8,8 @@ import {
   Wand2,
   Copy,
   Save,
-  Download
+  Download,
+  Crown
 } from 'lucide-react';
 import { generateContent as geminiGenerateContent } from '../../lib/gemini';
 import { supabase } from '../../lib/supabase';
@@ -37,11 +38,13 @@ export function ContentGenerator() {
     }
   });
 
+  const isPro = profile?.is_pro || false;
+
   const contentTypes = [
-    { value: 'ideas', label: 'Content Ideas', icon: Lightbulb },
-    { value: 'script', label: 'Video Script', icon: FileText },
-    { value: 'caption', label: 'Social Caption', icon: MessageSquare },
-    { value: 'hashtags', label: 'Hashtags', icon: Hash },
+    { value: 'ideas', label: 'Content Ideas', icon: Lightbulb, pro: false },
+    { value: 'script', label: 'Video Script', icon: FileText, pro: true },
+    { value: 'caption', label: 'Social Caption', icon: MessageSquare, pro: false },
+    { value: 'hashtags', label: 'Hashtags', icon: Hash, pro: false },
   ];
 
   const platforms = [
@@ -134,22 +137,36 @@ export function ContentGenerator() {
               Content Type
             </label>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-              {contentTypes.map((type) => (
-                <label key={type.value} className="relative">
-                  <input
-                    {...register('type')}
-                    type="radio"
-                    value={type.value}
-                    className="sr-only peer"
-                  />
-                  <div className="flex flex-col items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300 peer-checked:border-primary-500 peer-checked:bg-primary-50 transition-all">
-                    <type.icon className="h-6 w-6 text-gray-400 peer-checked:text-primary-600 mb-2" />
-                    <span className="text-sm font-medium text-gray-700 peer-checked:text-primary-700">
-                      {type.label}
-                    </span>
-                  </div>
-                </label>
-              ))}
+              {contentTypes.map((type) => {
+                const isLocked = type.pro && !isPro;
+                return (
+                  <label key={type.value} className={`relative rounded-lg transition-all duration-300 ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                    <input
+                      {...register('type')}
+                      type="radio"
+                      value={type.value}
+                      className="sr-only peer"
+                      disabled={isLocked}
+                    />
+                    <div className={`flex flex-col items-center p-4 border-2 rounded-lg ${
+                      watch('type') === type.value
+                        ? 'border-primary-500 bg-primary-50'
+                        : 'border-gray-200'
+                    } ${isLocked ? 'bg-gray-100' : 'cursor-pointer hover:border-primary-300 peer-checked:border-primary-500 peer-checked:bg-primary-50'}`}>
+                      <type.icon className="h-6 w-6 text-gray-400 peer-checked:text-primary-600 mb-2" />
+                      <span className="text-sm font-medium text-gray-700 peer-checked:text-primary-700">
+                        {type.label}
+                      </span>
+                    </div>
+                    {isLocked && (
+                      <div className="absolute top-2 right-2 flex items-center space-x-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                        <Crown className="h-3 w-3" />
+                        <span>PRO</span>
+                      </div>
+                    )}
+                  </label>
+                )
+              })}
             </div>
           </div>
 

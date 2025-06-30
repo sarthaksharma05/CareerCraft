@@ -33,6 +33,8 @@ export function VideoStudio() {
   const [progress, setProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   
+  const isPro = profile?.is_pro || false;
+  
   const handleNotifyMe = async () => {
     if (!email.trim() || !email.includes('@')) {
       toast.error('Please enter a valid email address');
@@ -66,16 +68,16 @@ export function VideoStudio() {
   const elevenlabs = new ElevenLabsService();
 
   // --- Tavus Replica IDs (update here if needed) ---
-  const REPLICA_IDS = {
-    professionalMale: 'rf4703150052',
-    professionalFemale: 'r665388ec672',
-    energeticMale: 'r92debe21318',
-    friendlyFemale: 'r9d30b0e55ac',
-  };
+  const REPLICA_IDS = [
+    { id: 'rf4703150052', name: 'Professional Male', pro: false },
+    { id: 'r665388ec672', name: 'Professional Female', pro: false },
+    { id: 'r92debe21318', name: 'Energetic Male', pro: true },
+    { id: 'r9d30b0e55ac', name: 'Friendly Female', pro: true },
+  ];
 
   // Default voice and replica IDs
   const defaultVoiceId = '21m00Tcm4TlvDq8ikWAM'; // ElevenLabs default voice
-  const [selectedReplicaId, setSelectedReplicaId] = useState<string>(REPLICA_IDS.professionalMale);
+  const [selectedReplicaId, setSelectedReplicaId] = useState<string>(REPLICA_IDS[0].id);
 
   // Generate video handler
   const handleGenerateVideo = async () => {
@@ -225,10 +227,14 @@ export function VideoStudio() {
             onChange={(e) => setSelectedReplicaId(e.target.value)}
             disabled={isGenerating}
           >
-            <option value={REPLICA_IDS.professionalMale}>Professional Male</option>
-            <option value={REPLICA_IDS.professionalFemale}>Professional Female</option>
-            <option value={REPLICA_IDS.energeticMale}>Energetic Male</option>
-            <option value={REPLICA_IDS.friendlyFemale}>Friendly Female</option>
+            {REPLICA_IDS.map(replica => {
+              const isLocked = replica.pro && !isPro;
+              return (
+                <option key={replica.id} value={replica.id} disabled={isLocked}>
+                  {replica.name} {isLocked ? '(Pro)' : ''}
+                </option>
+              );
+            })}
           </select>
         </div>
         

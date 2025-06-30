@@ -1,335 +1,138 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Briefcase, 
-  DollarSign, 
-  Users, 
-  Calendar, 
-  MapPin,
-  Filter,
-  Search,
-  Star,
-  Send
-} from 'lucide-react';
-import { supabase, Campaign } from '../../lib/supabase';
-import { useAuth } from '../../hooks/useAuth';
-import toast from 'react-hot-toast';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Briefcase, Rss, Mail, Search, Edit3, Share2, DollarSign } from 'lucide-react';
 
 export function CampaignMarketplace() {
-  const { profile } = useAuth();
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedNiche, setSelectedNiche] = useState('all');
-  const [minBudget, setMinBudget] = useState('');
-  const [applications, setApplications] = useState<string[]>([]);
-
-  const niches = [
-    'All', 'Fitness', 'Business', 'Lifestyle', 'Technology', 
-    'Food', 'Travel', 'Fashion', 'Education', 'Entertainment'
+  const processSteps = [
+    {
+      icon: Search,
+      title: 'Discover Campaigns',
+      description: 'Browse exclusive opportunities from leading brands that match your niche.',
+      color: 'purple'
+    },
+    {
+      icon: Edit3,
+      title: 'Apply & Pitch',
+      description: 'Craft your unique proposal and apply to the campaigns that excite you most.',
+      color: 'pink'
+    },
+    {
+      icon: Share2,
+      title: 'Collaborate',
+      description: 'Work directly with brands to produce authentic and engaging content.',
+      color: 'indigo'
+    },
+    {
+      icon: DollarSign,
+      title: 'Get Paid',
+      description: 'Receive secure and timely payments right after your successful collaboration.',
+      color: 'emerald'
+    }
   ];
 
-  useEffect(() => {
-    loadCampaigns();
-    loadUserApplications();
-  }, []);
-
-  const loadCampaigns = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('campaigns')
-        .select(`
-          *,
-          brand:profiles(full_name, avatar_url)
-        `)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      
-      // Mock data for demo since we don't have actual campaigns
-      const mockCampaigns: Campaign[] = [
-        {
-          id: '1',
-          brand_id: '1',
-          title: 'Fitness Equipment Launch',
-          description: 'Looking for fitness influencers to promote our new home gym equipment line. Must have engaged audience in fitness niche.',
-          budget: 2500,
-          niche: 'fitness',
-          requirements: ['10K+ followers', 'Fitness content focus', 'High engagement rate'],
-          status: 'active',
-          applications_count: 12,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          brand: {
-            id: '1',
-            email: 'brand@example.com',
-            full_name: 'FitGear Pro',
-            is_pro: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }
-        },
-        {
-          id: '2',
-          brand_id: '2',
-          title: 'Tech Startup Promotion',
-          description: 'Seeking tech reviewers and business content creators to review our productivity app.',
-          budget: 1800,
-          niche: 'technology',
-          requirements: ['Tech-focused content', '5K+ followers', 'Previous brand partnerships'],
-          status: 'active',
-          applications_count: 8,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          brand: {
-            id: '2',
-            email: 'brand2@example.com',
-            full_name: 'TechFlow Solutions',
-            is_pro: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }
-        },
-        {
-          id: '3',
-          brand_id: '3',
-          title: 'Lifestyle Brand Collaboration',
-          description: 'Fashion and lifestyle brand looking for creators to showcase our sustainable clothing line.',
-          budget: 3200,
-          niche: 'lifestyle',
-          requirements: ['Lifestyle content', '15K+ followers', 'Sustainability focus'],
-          status: 'active',
-          applications_count: 25,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          brand: {
-            id: '3',
-            email: 'brand3@example.com',
-            full_name: 'EcoStyle Co.',
-            is_pro: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          }
-        }
-      ];
-
-      setCampaigns(data?.length ? data : mockCampaigns);
-    } catch (error) {
-      console.error('Error loading campaigns:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadUserApplications = async () => {
-    if (!profile) return;
-
-    try {
-      const { data, error } = await supabase
-        .from('campaign_applications')
-        .select('campaign_id')
-        .eq('creator_id', profile.id);
-
-      if (error) throw error;
-      setApplications(data?.map(app => app.campaign_id) || []);
-    } catch (error) {
-      console.error('Error loading applications:', error);
-    }
-  };
-
-  const applyToCampaign = async (campaignId: string) => {
-    if (!profile) {
-      toast.error('Please complete your profile first');
-      return;
-    }
-
-    try {
-      const { error } = await supabase
-        .from('campaign_applications')
-        .insert({
-          campaign_id: campaignId,
-          creator_id: profile.id,
-          proposal: 'I am interested in collaborating on this campaign. I believe my content aligns well with your brand values.',
-          status: 'pending',
-        });
-
-      if (error) throw error;
-      
-      setApplications([...applications, campaignId]);
-      toast.success('Application submitted successfully!');
-    } catch (error: any) {
-      if (error.code === '23505') {
-        toast.error('You have already applied to this campaign');
-      } else {
-        toast.error('Failed to submit application');
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
       }
     }
   };
 
-  const filteredCampaigns = campaigns.filter(campaign => {
-    const matchesSearch = campaign.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         campaign.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesNiche = selectedNiche === 'all' || campaign.niche === selectedNiche.toLowerCase();
-    const matchesBudget = !minBudget || campaign.budget >= parseInt(minBudget);
-    
-    return matchesSearch && matchesNiche && matchesBudget;
-  });
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
+  const iconColors = {
+    purple: 'bg-purple-100 text-purple-600',
+    pink: 'bg-pink-100 text-pink-600',
+    indigo: 'bg-indigo-100 text-indigo-600',
+    emerald: 'bg-emerald-100 text-emerald-600'
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-success-500 to-emerald-500 rounded-lg">
-            <Briefcase className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Campaign Marketplace</h1>
-            <p className="text-gray-600">Find brand partnerships and collaboration opportunities</p>
-          </div>
-        </div>
+    <div className="flex items-center justify-center min-h-full bg-gradient-to-br from-gray-50 to-blue-50 p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center bg-white p-8 sm:p-12 rounded-2xl shadow-2xl max-w-4xl w-full border border-gray-100"
+      >
+        <motion.div
+          animate={{
+            scale: [1, 1.05, 1],
+          }}
+          transition={{
+            duration: 3,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "mirror"
+          }}
+          className="inline-block p-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6"
+        >
+          <Briefcase className="h-12 w-12 text-white" />
+        </motion.div>
 
-        {/* Filters */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="md:col-span-2">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search campaigns..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-          
-          <select
-            value={selectedNiche}
-            onChange={(e) => setSelectedNiche(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            {niches.map((niche) => (
-              <option key={niche.toLowerCase()} value={niche.toLowerCase()}>
-                {niche}
-              </option>
-            ))}
-          </select>
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4">
+          The Future of Brand Deals is Coming
+        </h1>
+        
+        <p className="text-md sm:text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
+          Our Campaign Marketplace will be an exclusive hub for creators to connect with top brands, manage partnerships, and monetize their content seamlessly.
+        </p>
 
-          <input
-            type="number"
-            placeholder="Min budget"
-            value={minBudget}
-            onChange={(e) => setMinBudget(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          />
-        </div>
-      </div>
-
-      {/* Campaigns Grid */}
-      {loading ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 animate-pulse">
-              <div className="h-6 bg-gray-200 rounded mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded mb-4"></div>
-              <div className="flex justify-between">
-                <div className="h-8 w-24 bg-gray-200 rounded"></div>
-                <div className="h-8 w-20 bg-gray-200 rounded"></div>
+        {/* Process Steps */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 my-12 text-left"
+        >
+          {processSteps.map((step, index) => (
+            <motion.div key={index} variants={itemVariants} className="flex flex-col items-center text-center">
+              <div className={`p-4 rounded-full mb-4 ${iconColors[step.color]}`}>
+                <step.icon className="h-8 w-8" />
               </div>
-            </div>
+              <h3 className="font-bold text-lg text-gray-800 mb-1">{step.title}</h3>
+              <p className="text-sm text-gray-500">{step.description}</p>
+            </motion.div>
           ))}
+        </motion.div>
+        
+        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mt-8">
+          <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center justify-center">
+            <Rss className="h-5 w-5 mr-2 text-purple-600" />
+            Be the First to Know
+          </h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Join our launch list and get priority access when the Marketplace goes live.
+          </p>
+          <form className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-lg mx-auto">
+            <input
+              type="email"
+              placeholder="Your best email address"
+              className="w-full sm:w-auto flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+              aria-label="Email for notification"
+            />
+            <button
+              type="submit"
+              className="w-full sm:w-auto bg-gray-900 text-white font-semibold px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center shadow-md hover:shadow-lg"
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              Notify Me
+            </button>
+          </form>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredCampaigns.map((campaign) => (
-            <div key={campaign.id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <h3 className="text-xl font-semibold text-gray-900">
-                      {campaign.title}
-                    </h3>
-                    <span className="px-2 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded-full">
-                      {campaign.niche}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 mb-4">{campaign.description}</p>
-                </div>
-              </div>
-
-              <div className="space-y-3 mb-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-success-600">
-                    <DollarSign className="h-5 w-5 mr-1" />
-                    <span className="font-semibold">${campaign.budget.toLocaleString()}</span>
-                  </div>
-                  <div className="flex items-center text-gray-500">
-                    <Users className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{campaign.applications_count} applications</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center text-gray-500">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  <span className="text-sm">
-                    Posted {new Date(campaign.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <div className="flex items-center text-gray-500">
-                  <Star className="h-4 w-4 mr-1" />
-                  <span className="text-sm font-medium">{campaign.brand.full_name}</span>
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <h4 className="text-sm font-medium text-gray-900 mb-2">Requirements:</h4>
-                <div className="flex flex-wrap gap-1">
-                  {campaign.requirements.map((req, index) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                    >
-                      {req}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex space-x-3">
-                {applications.includes(campaign.id) ? (
-                  <button
-                    disabled
-                    className="flex-1 bg-gray-100 text-gray-500 py-2 px-4 rounded-lg font-medium cursor-not-allowed"
-                  >
-                    Applied
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => applyToCampaign(campaign.id)}
-                    className="flex-1 bg-gradient-to-r from-success-500 to-emerald-500 text-white py-2 px-4 rounded-lg font-medium hover:from-success-600 hover:to-emerald-600 focus:ring-2 focus:ring-success-500 focus:ring-offset-2 transition-all flex items-center justify-center"
-                  >
-                    <Send className="h-4 w-4 mr-2" />
-                    Apply Now
-                  </button>
-                )}
-                <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {filteredCampaigns.length === 0 && !loading && (
-        <div className="text-center py-12">
-          <Briefcase className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No campaigns found</h3>
-          <p className="text-gray-600">Try adjusting your filters to see more opportunities.</p>
-        </div>
-      )}
+      </motion.div>
     </div>
   );
 }

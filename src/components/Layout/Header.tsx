@@ -8,7 +8,7 @@ import {
   User, 
   Settings, 
   CreditCard, 
-  Crown,
+  Crown, 
   ChevronDown,
   Shield,
   HelpCircle,

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { Mic, Play, Pause, Download, Save, Volume2, AudioWaveform as Waveform, RefreshCw, CheckCircle, AlertCircle, Settings, Wifi, WifiOff } from 'lucide-react';
+import { Mic, Play, Pause, Download, Save, Volume2, AudioWaveform as Waveform, RefreshCw, CheckCircle, AlertCircle, Settings, Wifi, WifiOff, Crown } from 'lucide-react';
 import { elevenLabsService } from '../../lib/elevenlabs';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 
 interface VoiceoverForm {
   title: string;
@@ -42,6 +43,24 @@ export function VoiceoverStudio() {
       voiceId: '',
     }
   });
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05
+      }
+    }
+  };
+
+  const isPro = profile?.is_pro || false;
+  const freeVoiceCount = 3;
 
   useEffect(() => {
     checkApiStatus();
@@ -677,28 +696,51 @@ export function VoiceoverStudio() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {voices.map((voice) => (
-                  <label key={voice.voice_id} className="relative">
-                    <input
-                      {...register('voiceId', { required: 'Please select a voice' })}
-                      type="radio"
-                      value={voice.voice_id}
-                      className="sr-only peer"
-                    />
-                    <div className="flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-primary-300 peer-checked:border-primary-500 peer-checked:bg-primary-50 transition-all">
-                      <Volume2 className="h-5 w-5 text-gray-400 peer-checked:text-primary-600 mr-3" />
-                      <div>
-                        <div className="font-medium text-gray-900 peer-checked:text-primary-900">
-                          {voice.name}
+              <div className="space-y-4">
+                <motion.div 
+                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {voices.map((voice, index) => {
+                    const isLocked = !isPro && index >= freeVoiceCount;
+                    return (
+                      <motion.div
+                        key={voice.voice_id}
+                        variants={itemVariants}
+                        className={`relative border-2 rounded-lg p-4 cursor-pointer transition-all duration-300 ${
+                          watch('voiceId') === voice.voice_id
+                            ? 'border-primary-500 bg-primary-50 scale-105 shadow-lg'
+                            : isLocked
+                            ? 'border-gray-200 bg-gray-100 opacity-60'
+                            : 'border-gray-200 hover:border-primary-300 hover:bg-primary-50/50'
+                        }`}
+                        onClick={() => !isLocked && setValue('voiceId', voice.voice_id)}
+                      >
+                        {isLocked && (
+                          <div className="absolute inset-0 bg-gray-800/20 backdrop-blur-sm flex items-center justify-center rounded-lg z-10">
+                            <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                              <Crown className="h-3 w-3" />
+                              <span>PRO</span>
+                            </div>
+                          </div>
+                        )}
+                        <div className="flex items-center space-x-3">
+                          <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                            <img src={voice.labels.avatar || `https://i.pravatar.cc/48?u=${voice.voice_id}`} alt={voice.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-gray-900">{voice.name}</p>
+                            <p className="text-xs text-gray-500 capitalize">
+                              {voice.labels.gender} · {voice.labels.age} · {voice.labels.accent}
+                            </p>
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-500">
-                          {voice.category || voice.description || 'AI Voice'}
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                ))}
+                      </motion.div>
+                    );
+                  })}
+                </motion.div>
               </div>
             )}
             {errors.voiceId && (

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RevenueCatService } from '../../lib/revenuecat';
+import { Sparkles } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
 const revenueCat = new RevenueCatService();
 
@@ -22,6 +24,7 @@ export function PaymentPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const { updateProfile } = useAuth();
 
   const planDisplay = {
     creator: { name: 'Creator', price: 29, desc: 'For serious creators ready to scale' },
@@ -31,16 +34,20 @@ export function PaymentPage() {
   const selected = planDisplay[plan] || planDisplay.creator;
   const price = billing === 'annual' ? selected.price * 10 : selected.price;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handlePayment = async () => {
     setLoading(true);
     setError('');
     try {
       const paymentDetails = { cardNumber, expiryDate: expiry, cvv, name, email, country };
       await revenueCat.processPayment(paymentDetails, price);
-      await revenueCat.purchasePlan(plan, billing);
+      await updateProfile({
+        is_pro: true,
+        subscription_tier: plan === 'creator' ? 'pro' : plan,
+        subscription_status: 'active',
+        billing_cycle: billing,
+      });
       setSuccess(true);
-      setTimeout(() => navigate('/app/dashboard'), 2000);
+      setTimeout(() => navigate('/app/dashboard'), 500);
     } catch (err: any) {
       setError(err.message || 'Payment failed');
     } finally {
@@ -55,7 +62,7 @@ export function PaymentPage() {
         <div className="w-1/2 bg-zinc-900 text-white p-10 flex flex-col justify-between">
           <div>
             <div className="flex items-center mb-8">
-              <img src="/public/image.png" alt="Logo" className="h-8 w-8 mr-3 rounded-full" />
+              <Sparkles className="w-8 h-8 mr-3 text-white bg-clip-text text-transparent bg-gradient-to-br from-purple-400 to-pink-600" />
               <span className="font-bold text-lg">CreatorCopilot</span>
             </div>
             <div className="mb-8">
@@ -84,7 +91,7 @@ export function PaymentPage() {
         {/* Right: Payment Form */}
         <div className="w-1/2 bg-white p-10 flex flex-col justify-center">
           <h2 className="text-2xl font-bold mb-6">Pay with card</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={(e) => { e.preventDefault(); handlePayment(); }} className="space-y-4">
             <input
               type="email"
               className="w-full border rounded-lg px-3 py-2"

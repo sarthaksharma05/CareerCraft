@@ -365,85 +365,52 @@ export function Dashboard() {
       )}
 
       {/* Welcome Header */}
-      <motion.div 
-        className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 text-gray-900 relative overflow-hidden"
-        variants={itemVariants}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-100/20 to-indigo-100/20"></div>
-        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-200/30 rounded-full -translate-y-16 translate-x-16"></div>
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-indigo-200/30 rounded-full translate-y-12 -translate-x-12"></div>
-        
-        <div className="flex items-center justify-between relative z-10">
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <h1 className="text-3xl font-bold mb-2 text-gray-900">
-              Welcome back, {profile?.full_name || 'Creator'}! 
-            </h1>
-            <p className="text-gray-600 text-lg">
-              Ready to create amazing content? Let's get started with AI-powered tools.
-            </p>
-            <div className="flex items-center space-x-4 mt-4">
-              <div className="flex items-center space-x-2 bg-white/50 px-3 py-1 rounded-full">
-                <Users className="h-5 w-5 text-blue-600" />
-                <span className="text-sm font-medium">{profile?.follower_count?.toLocaleString() || '0'} followers</span>
-              </div>
-              <div className="flex items-center space-x-2 bg-white/50 px-3 py-1 rounded-full">
-                <Target className="h-5 w-5 text-indigo-600" />
-                <span className="text-sm font-medium capitalize">{profile?.niche || 'General'} Creator</span>
-              </div>
-            </div>
-          </motion.div>
-          <motion.div 
-            className="hidden sm:block"
-            animate={{ 
-              y: [0, -10, 0],
-              rotate: [0, 5, -5, 0]
-            }}
-            transition={{ 
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-4 rounded-2xl">
-              <Sparkles className="h-20 w-20 text-white" />
-            </div>
-          </motion.div>
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-white">
+            Welcome back, {profile?.full_name?.split(' ')[0] || 'Creator'}!
+          </h1>
+          <p className="text-gray-400 mt-1">Here's your CreatorCopilot dashboard.</p>
         </div>
-        
         {!profile?.is_pro && (
-          <motion.div 
-            className="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            whileHover={{ scale: 1.02 }}
+          <motion.button
+            onClick={handleUpgradeClick}
+            className="mt-4 sm:mt-0 flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                >
-                  <Crown className="h-5 w-5 text-yellow-600" />
-                </motion.div>
-                <span className="font-medium text-gray-800">Upgrade to Pro for unlimited access to all features</span>
-              </div>
-              <motion.button 
-                onClick={handleUpgradeClick}
-                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-6 py-2 rounded-lg font-medium hover:from-yellow-600 hover:to-orange-600 transition-all shadow-lg"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Upgrade Now
-              </motion.button>
-            </div>
-          </motion.div>
+            <Crown className="w-5 h-5" />
+            <span>Upgrade to Pro</span>
+          </motion.button>
         )}
       </motion.div>
+
+      {/* Upgrade banner - only show for non-pro users */}
+      {!profile?.is_pro && (
+        <motion.div
+          variants={itemVariants}
+          className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+        >
+          <div className="flex items-center space-x-4">
+            <div className="p-4 bg-white/10 rounded-full">
+              <Sparkles className="h-8 w-8 text-white" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Unlock Your Full Potential</h2>
+              <p className="text-purple-200 mt-1">Go Pro to access unlimited content generation, premium features, and priority support.</p>
+            </div>
+          </div>
+          <motion.button
+            onClick={handleUpgradeClick}
+            className="flex-shrink-0 flex items-center space-x-2 px-6 py-3 bg-white text-purple-700 font-bold rounded-lg shadow-md hover:bg-gray-100 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span>View Pro Plans</span>
+            <ArrowRight className="w-5 h-5" />
+          </motion.button>
+        </motion.div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">

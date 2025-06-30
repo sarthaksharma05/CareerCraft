@@ -153,19 +153,21 @@ export function BillingPage() {
     setLoading(true);
     try {
       // Simulate cancellation
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Update profile to free tier at end of current period
-      const nextPaymentDate = new Date(profile?.next_payment_date || Date.now() + 30 * 24 * 60 * 60 * 1000);
-      
+      // Update profile to free tier immediately
       await updateProfile({
+        is_pro: false,
+        subscription_tier: 'free',
         subscription_status: 'canceled',
+        billing_cycle: null,
+        next_payment_date: null,
       });
       
-      toast.success('Your subscription has been canceled. You will have access until the end of your current billing period.');
+      toast.success('Your subscription has been canceled. You are now on the Free Plan.');
       setShowCancelModal(false);
       
-      // Refresh billing data
+      // Refresh billing data to reflect the new free status
       loadBillingData();
     } catch (error) {
       toast.error('Failed to cancel subscription. Please try again.');

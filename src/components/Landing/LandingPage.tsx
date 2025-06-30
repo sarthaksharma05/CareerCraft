@@ -453,15 +453,6 @@ export function LandingPage() {
                     <span>{isAuthenticated ? 'Go to Dashboard' : 'Start Creating Free'}</span>
                     <ArrowRight className="h-5 w-5" />
                   </motion.button>
-
-                  <motion.button
-                    className="bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/20 transition-all border border-white/20 flex items-center space-x-2"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Play className="h-5 w-5" />
-                    <span>Watch Demo</span>
-                  </motion.button>
                 </motion.div>
 
                 {/* Scroll Indicator */}
