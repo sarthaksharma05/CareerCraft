@@ -26,7 +26,6 @@ export function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(profile?.avatar_url || '');
-  const [uploading, setUploading] = useState(false);
   
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ProfileFormData>({
     defaultValues: {
@@ -124,27 +123,6 @@ export function ProfilePage() {
     visible: { opacity: 1, y: 0 }
   };
 
-  // Handle avatar upload
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      const fileExt = file.name.split('.').pop();
-      const filePath = `avatars/${profile.id}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
-      if (uploadError) throw uploadError;
-      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
-      setAvatarPreview(data.publicUrl);
-      await updateProfile({ avatar_url: data.publicUrl });
-      toast.success('Profile photo updated!');
-    } catch (err) {
-      toast.error('Failed to upload photo');
-    } finally {
-      setUploading(false);
-    }
-  };
-
   // Handle static avatar selection
   const handleStaticAvatar = async (url: string) => {
     setAvatarPreview(url);
@@ -186,7 +164,6 @@ export function ProfilePage() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <Camera className="h-4 w-4" />
-                  <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={uploading} />
                 </motion.label>
               </motion.div>
               <div>
@@ -239,7 +216,7 @@ export function ProfilePage() {
         >
           {/* Avatar/Photo selection UI */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Profile Photo or Avatar</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Choose a Cartoon Avatar</label>
             <div className="flex items-center space-x-4 mb-2">
               <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-300 flex items-center justify-center bg-gray-100">
                 {avatarPreview ? (
@@ -248,13 +225,8 @@ export function ProfilePage() {
                   <User className="h-8 w-8 text-gray-400" />
                 )}
               </div>
-              <label className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white px-4 py-2 rounded-lg cursor-pointer hover:from-primary-600 hover:to-secondary-600 transition-all">
-                <Upload className="h-4 w-4 inline mr-2" />Upload Photo
-                <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={uploading} />
-              </label>
             </div>
             <div className="mt-2">
-              <span className="block text-xs text-gray-500 mb-1">Or choose a cartoon avatar:</span>
               <div className="flex space-x-2">
                 {staticAvatars.map((url) => (
                   <button
