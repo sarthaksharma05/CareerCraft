@@ -17,6 +17,7 @@ interface AuthContextType {
   resendVerificationEmail: () => Promise<void>;
   createDemoUser: () => Promise<void>;
   signInDemoUser: () => Promise<void>;
+  signIn: (email, password) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -150,6 +151,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const signIn = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    return data;
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -191,6 +198,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     resendVerificationEmail,
     createDemoUser,
     signInDemoUser,
+    signIn,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
