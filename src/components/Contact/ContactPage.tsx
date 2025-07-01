@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { GradientButton } from '@/components/ui/gradient-button';
 import emailjs from 'emailjs-com';
+import { Listbox } from '@headlessui/react';
+import { Check, ChevronDown } from 'lucide-react';
 
 interface ContactFormData {
   name: string;
@@ -16,7 +18,17 @@ interface ContactFormData {
 
 export function ContactPage() {
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormData>();
+  const { register, handleSubmit, formState: { errors }, reset, setValue, trigger } = useForm<ContactFormData>();
+
+  const subjectOptions = [
+    { value: '', label: 'Select a subject' },
+    { value: 'general', label: 'General Inquiry' },
+    { value: 'support', label: 'Technical Support' },
+    { value: 'billing', label: 'Billing Question' },
+    { value: 'partnership', label: 'Partnership' },
+    { value: 'feedback', label: 'Feedback' },
+  ];
+  const [selectedSubject, setSelectedSubject] = useState(subjectOptions[0]);
 
   const onSubmit = async (data: ContactFormData) => {
     setLoading(true);
@@ -186,17 +198,43 @@ export function ContactPage() {
 
                   <div>
                     <label className="block text-white font-medium mb-2">Subject</label>
-                    <select
-                      {...register('subject', { required: 'Subject is required' })}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent backdrop-blur-md transition-all"
-                    >
-                      <option value="">Select a subject</option>
-                      <option value="general">General Inquiry</option>
-                      <option value="support">Technical Support</option>
-                      <option value="billing">Billing Question</option>
-                      <option value="partnership">Partnership</option>
-                      <option value="feedback">Feedback</option>
-                    </select>
+                    <Listbox value={selectedSubject} onChange={value => {
+                      setSelectedSubject(value);
+                      setValue('subject', value.value, { shouldValidate: true });
+                      trigger('subject');
+                    }}>
+                      {({ open }) => (
+                        <div className="relative">
+                          <Listbox.Button className="w-full px-4 py-3 bg-[#181b23] border border-purple-500 rounded-xl text-white text-left focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all pr-10 flex items-center justify-between">
+                            <span>{selectedSubject.label}</span>
+                            <ChevronDown className="w-5 h-5 text-purple-300 absolute right-3 pointer-events-none" />
+                          </Listbox.Button>
+                          <Listbox.Options className="absolute z-10 mt-2 w-full bg-[#181b23] border border-purple-500 rounded-xl shadow-lg max-h-60 overflow-auto focus:outline-none">
+                            {subjectOptions.map((option) => (
+                              <Listbox.Option
+                                key={option.value}
+                                value={option}
+                                className={({ active, selected }) =>
+                                  `cursor-pointer select-none relative px-4 py-3 text-white ${
+                                    active ? 'bg-purple-900/40' : ''
+                                  } ${selected ? 'font-semibold text-purple-400' : ''}`
+                                }
+                              >
+                                {({ selected }) => (
+                                  <>
+                                    <span>{option.label}</span>
+                                    {selected ? (
+                                      <Check className="w-4 h-4 text-purple-400 absolute right-3 top-1/2 -translate-y-1/2" />
+                                    ) : null}
+                                  </>
+                                )}
+                              </Listbox.Option>
+                            ))}
+                          </Listbox.Options>
+                        </div>
+                      )}
+                    </Listbox>
+                    <input type="hidden" {...register('subject', { required: 'Subject is required' })} value={selectedSubject.value} />
                     {errors.subject && (
                       <p className="mt-1 text-sm text-red-400">{errors.subject.message}</p>
                     )}
