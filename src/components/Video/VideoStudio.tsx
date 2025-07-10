@@ -109,7 +109,7 @@ export function VideoStudio() {
       console.log('⏳ Polling for video completion...');
       let status = 'generating';
       let pollCount = 0;
-      const maxPolls = 30; // 2 minutes max
+      const maxPolls = 300; // 2 minutes max
       
       while (status !== 'ready' && status !== 'completed' && pollCount < maxPolls) {
         await new Promise(resolve => setTimeout(resolve, 4000)); // Wait 4 seconds
