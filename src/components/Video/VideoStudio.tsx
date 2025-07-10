@@ -253,10 +253,10 @@ export function VideoStudio() {
         >
           {isGenerating ? 'Generating...' : 'Generate Video'}
         </button>
-        {isGenerating && (
+        {isGenerating && progress > 0 && (
           <div className="mt-4 text-gray-700">Generating video... Progress: {progress}%</div>
         )}
-        {error && <div className="mt-4 text-red-600">{error}</div>}
+        {error && !videoUrl && <div className="mt-4 text-red-600">{error}</div>}
         {videoUrl && (
           <div className="mt-6">
             <video src={videoUrl} controls className="w-full rounded-lg shadow-lg" />
