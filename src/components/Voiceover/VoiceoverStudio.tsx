@@ -712,27 +712,17 @@ export function VoiceoverStudio() {
               </div>
             ) : (
               <div className="space-y-4">
-                <motion.div 
-                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {voices.map((voice, index) => {
                     const isLocked = !isPro && index >= freeVoiceCount;
                     return (
-                      <motion.div
-                        key={voice.voice_id}
-                        variants={itemVariants}
-                        className={`relative border-2 rounded-lg p-4 cursor-pointer transition-all duration-300 ${
-                          watch('voiceId') === voice.voice_id
-                            ? 'border-primary-500 bg-primary-50 scale-105 shadow-lg'
-                            : isLocked
-                            ? 'border-gray-200 bg-gray-100 opacity-60'
-                            : 'border-gray-200 hover:border-primary-300 hover:bg-primary-50/50'
-                        }`}
-                        onClick={() => !isLocked && setValue('voiceId', voice.voice_id)}
-                      >
+                      <div key={voice.voice_id} className={`relative border-2 rounded-lg p-4 cursor-pointer transition-all duration-300 ${
+                        watch('voiceId') === voice.voice_id
+                          ? 'border-primary-500 bg-primary-50 scale-105 shadow-lg'
+                          : isLocked
+                          ? 'border-gray-200 bg-gray-100 opacity-60'
+                          : 'border-gray-200 hover:border-primary-300 hover:bg-primary-50/50'
+                      }`} onClick={() => !isLocked && setValue('voiceId', voice.voice_id)}>
                         {isLocked && (
                           <div className="absolute inset-0 bg-gray-800/20 backdrop-blur-sm flex items-center justify-center rounded-lg z-10">
                             <div className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-bold">
@@ -752,10 +742,10 @@ export function VoiceoverStudio() {
                             </p>
                           </div>
                         </div>
-                      </motion.div>
+                      </div>
                     );
                   })}
-                </motion.div>
+                </div>
               </div>
             )}
             {errors.voiceId && (

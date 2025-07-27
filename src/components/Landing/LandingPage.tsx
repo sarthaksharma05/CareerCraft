@@ -272,400 +272,183 @@ export function LandingPage() {
       {/* Content */}
       <div className="relative z-20">
         {/* Header */}
-        <motion.header 
+        <header 
           className="relative z-50 bg-white/5 backdrop-blur-md border-b border-white/10"
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <motion.div 
-                className="flex items-center space-x-3"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <motion.div 
-                  className="p-2 bg-gradient-to-r from-white to-gray-300 rounded-xl shadow-lg"
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
-                  <Sparkles className="h-8 w-8 text-black" />
-                </motion.div>
-                <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-                  CreatorCopilot
-                </Link>
-              </motion.div>
-
-              {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center space-x-8">
-                <a href="#features" className="text-white/80 hover:text-white transition-colors font-medium">Features</a>
-                <a href="#pricing" className="text-white/80 hover:text-white transition-colors font-medium">Pricing</a>
-                <Link to="/about" className="text-white/80 hover:text-white transition-colors font-medium">About</Link>
-                <Link to="/contact" className="text-white/80 hover:text-white transition-colors font-medium">Contact</Link>
-              </nav>
-
-              <div className="hidden md:flex items-center space-x-4">
-                {!isAuthenticated && (
-                  <motion.button
-                    onClick={handleSignIn}
-                    className="text-white/80 hover:text-white transition-colors font-medium"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Sign In
-                  </motion.button>
-                )}
-                <motion.button
-                  onClick={handleGetStarted}
-                  className="bg-gradient-to-r from-white to-gray-300 text-black px-6 py-3 rounded-full hover:from-gray-100 hover:to-gray-200 transition-all shadow-lg hover:shadow-xl font-semibold"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {isAuthenticated ? 'Go to Dashboard' : 'Get Started'}
-                </motion.button>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-gradient-to-r from-white to-gray-300 rounded-xl shadow-lg">
+                <Sparkles className="h-8 w-8 text-black" />
               </div>
-
-              {/* Mobile Menu Button */}
-              <motion.button
-                className="md:hidden text-white"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                whileTap={{ scale: 0.95 }}
-              >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </motion.button>
+              <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
+                CreatorCopilot
+              </Link>
             </div>
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-white/80 hover:text-white transition-colors font-medium">Features</a>
+              <a href="#pricing" className="text-white/80 hover:text-white transition-colors font-medium">Pricing</a>
+              <Link to="/about" className="text-white/80 hover:text-white transition-colors font-medium">About</Link>
+              <Link to="/contact" className="text-white/80 hover:text-white transition-colors font-medium">Contact</Link>
+            </nav>
+            <div className="hidden md:flex items-center space-x-4">
+              {!isAuthenticated && (
+                <button onClick={handleSignIn} className="text-white/80 hover:text-white transition-colors font-medium">
+                  Sign In
+                </button>
+              )}
+              <button onClick={handleGetStarted} className="bg-gradient-to-r from-white to-gray-300 text-black px-6 py-3 rounded-full hover:from-gray-100 hover:to-gray-200 transition-all shadow-lg hover:shadow-xl font-semibold">
+                {isAuthenticated ? 'Go to Dashboard' : 'Get Started'}
+              </button>
+            </div>
+            <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
-
-          {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <motion.div 
-              className="md:hidden bg-white/10 backdrop-blur-md border-t border-white/20"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-            >
-              <div className="px-4 py-6 space-y-4">
-                <a href="#features" className="block text-white/80 hover:text-white transition-colors font-medium">Features</a>
-                <a href="#pricing" className="block text-white/80 hover:text-white transition-colors font-medium">Pricing</a>
-                <Link to="/about" className="block text-white/80 hover:text-white transition-colors font-medium">About</Link>
-                <Link to="/contact" className="block text-white/80 hover:text-white transition-colors font-medium">Contact</Link>
-                <div className="pt-4 space-y-3">
-                  {!isAuthenticated && (
-                    <button
-                      onClick={handleSignIn}
-                      className="block w-full text-left text-white/80 hover:text-white transition-colors font-medium"
-                    >
-                      Sign In
-                    </button>
-                  )}
-                  <button
-                    onClick={handleGetStarted}
-                    className="block w-full bg-gradient-to-r from-white to-gray-300 text-black px-6 py-3 rounded-full hover:from-gray-100 hover:to-gray-200 transition-all font-semibold"
-                  >
-                    {isAuthenticated ? 'Go to Dashboard' : 'Get Started'}
+            <div className="md:hidden bg-white/10 backdrop-blur-md border-t border-white/20 px-4 py-6 space-y-4">
+              <a href="#features" className="block text-white/80 hover:text-white transition-colors font-medium">Features</a>
+              <a href="#pricing" className="block text-white/80 hover:text-white transition-colors font-medium">Pricing</a>
+              <Link to="/about" className="block text-white/80 hover:text-white transition-colors font-medium">About</Link>
+              <Link to="/contact" className="block text-white/80 hover:text-white transition-colors font-medium">Contact</Link>
+              <div className="pt-4 space-y-3">
+                {!isAuthenticated && (
+                  <button onClick={handleSignIn} className="block w-full text-left text-white/80 hover:text-white transition-colors font-medium">
+                    Sign In
                   </button>
-                </div>
+                )}
+                <button onClick={handleGetStarted} className="block w-full bg-gradient-to-r from-white to-gray-300 text-black px-6 py-3 rounded-full hover:from-gray-100 hover:to-gray-200 transition-all font-semibold">
+                  {isAuthenticated ? 'Go to Dashboard' : 'Get Started'}
+                </button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </motion.header>
+        </header>
 
         {/* Hero Section */}
         <section className="relative pt-20 pb-32">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              {/* Left Content */}
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.2 }}
-                className="text-center lg:text-left"
-              >
-                <motion.div 
-                  className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20"
-                  whileHover={{ scale: 1.05 }}
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Zap className="h-5 w-5 text-yellow-400" />
-                  </motion.div>
-                  <span className="text-white font-medium">AI-Powered Content Creation Platform</span>
-                </motion.div>
-
-                <motion.h1 
-                  className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.4 }}
-                >
-                  Create Content That
-                  <motion.span 
-                    className="block bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent"
-                    animate={{ 
-                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                    }}
-                    transition={{ duration: 5, repeat: Infinity }}
-                  >
-                    Captivates & Converts
-                  </motion.span>
-                </motion.h1>
-
-                <motion.p 
-                  className="text-xl text-gray-200 mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.6 }}
-                >
-                  Transform your creative process with our comprehensive AI-powered platform. Generate scripts, create voiceovers, 
-                  produce videos, discover trends, and connect with brands - all in one revolutionary workspace designed for modern creators.
-                </motion.p>
-
-                <motion.div 
-                  className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-6 mb-16"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.8 }}
-                >
-                  <motion.button
-                    onClick={handleGetStarted}
-                    className="bg-gradient-to-r from-white to-gray-300 text-black px-8 py-4 rounded-full text-lg font-semibold hover:from-gray-100 hover:to-gray-200 transition-all shadow-2xl hover:shadow-white/25 flex items-center space-x-2"
-                    whileHover={{ scale: 1.05, y: -3 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <span>{isAuthenticated ? 'Go to Dashboard' : 'Start Creating Free'}</span>
-                    <ArrowRight className="h-5 w-5" />
-                  </motion.button>
-                </motion.div>
-
-                {/* Scroll Indicator */}
-                <motion.div
-                  className="flex flex-col items-center lg:items-start"
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <span className="text-gray-200 text-sm mb-2">Discover More</span>
-                  <ChevronDown className="h-6 w-6 text-gray-300" />
-                </motion.div>
-              </motion.div>
-
-              {/* Right 3D Spline Scene */}
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.4 }}
-                className="relative h-[600px] lg:h-[700px] rounded-2xl overflow-hidden ml-4 lg:ml-8"
-                style={{ 
-                  transform: 'translateX(20px)',
-                  width: 'calc(100% + 40px)',
-                  marginRight: '-20px'
-                }}
-              >
-                <SafeSpline 
-                  scene="https://prod.spline.design/f3eZokxGZiqDydOn/scene.splinecode"
-                  className="w-full h-full rounded-2xl"
-                />
-              </motion.div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20">
+                <Zap className="h-5 w-5 text-yellow-400" />
+                <span className="text-white font-medium">AI-Powered Content Creation Platform</span>
+              </div>
+              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                Create Content That
+                <span className="block bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
+                  Captivates & Converts
+                </span>
+              </h1>
+              <p className="text-xl text-gray-200 mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed">
+                Transform your creative process with our comprehensive AI-powered platform. Generate scripts, create voiceovers, 
+                produce videos, discover trends, and connect with brands - all in one revolutionary workspace designed for modern creators.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-6 mb-16">
+                <button onClick={handleGetStarted} className="bg-gradient-to-r from-white to-gray-300 text-black px-8 py-4 rounded-full text-lg font-semibold hover:from-gray-100 hover:to-gray-200 transition-all shadow-2xl hover:shadow-white/25 flex items-center space-x-2">
+                  <span>{isAuthenticated ? 'Go to Dashboard' : 'Start Creating Free'}</span>
+                  <ArrowRight className="h-5 w-5" />
+                </button>
+              </div>
+              {/* Scroll Indicator */}
+              <div className="flex flex-col items-center lg:items-start">
+                <span className="text-gray-200 text-sm mb-2">Discover More</span>
+                <ChevronDown className="h-6 w-6 text-gray-300" />
+              </div>
+            </div>
+            {/* Right 3D Spline Scene */}
+            <div className="relative h-[600px] lg:h-[700px] rounded-2xl overflow-hidden ml-4 lg:ml-8" style={{ transform: 'translateX(20px)', width: 'calc(100% + 40px)', marginRight: '-20px' }}>
+              <SafeSpline scene="https://prod.spline.design/f3eZokxGZiqDydOn/scene.splinecode" className="w-full h-full rounded-2xl" />
             </div>
           </div>
         </section>
 
         {/* Stats Section */}
         <section className="relative py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  className="text-center"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <motion.div
-                    className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-md rounded-full border border-white/20 mb-4"
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <stat.icon className="h-8 w-8 text-purple-300" />
-                  </motion.div>
-                  <div className="text-4xl md:text-5xl font-bold text-white mb-2">{stat.number}</div>
-                  <div className="text-purple-200 font-medium">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-md rounded-full border border-white/20 mb-4">
+                  <stat.icon className="h-8 w-8 text-purple-300" />
+                </div>
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2">{stat.number}</div>
+                <div className="text-purple-200 font-medium">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* Features Section */}
         <section id="features" className="relative py-32">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              className="text-center mb-20"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <motion.div
-                className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20"
-                whileHover={{ scale: 1.05 }}
-              >
-                <Rocket className="h-5 w-5 text-cyan-400" />
-                <span className="text-white font-medium">Powerful Features</span>
-              </motion.div>
-              
-              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                Everything You Need to
-                <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Dominate Your Niche
-                </span>
-              </h2>
-              <p className="text-xl text-purple-200 max-w-4xl mx-auto leading-relaxed">
-                Our comprehensive suite of AI-powered tools helps you create, optimize, and monetize your content 
-                like never before. Join the future of content creation today.
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className="group relative bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all overflow-hidden"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: feature.delay }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -10, scale: 1.02 }}
-                >
-                  {/* Gradient Background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-                  
-                  <motion.div 
-                    className="inline-flex p-4 rounded-full bg-gradient-to-br from-purple-500 via-indigo-500 to-pink-500 mb-6 shadow-lg"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <feature.icon className="h-8 w-8 text-white" />
-                  </motion.div>
-                  
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-purple-200 transition-colors">
-                    {feature.title}
-                  </h3>
-                  <p className="text-purple-200 leading-relaxed group-hover:text-white transition-colors">
-                    {feature.description}
-                  </p>
-
-                  {/* Hover Effect */}
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
-                  />
-                </motion.div>
-              ))}
-            </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div key={index} className="group relative bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all overflow-hidden">
+                {/* Gradient Background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                <div className="inline-flex p-4 rounded-full bg-gradient-to-br from-purple-500 via-indigo-500 to-pink-500 mb-6 shadow-lg">
+                  <feature.icon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-purple-200 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-purple-200 leading-relaxed group-hover:text-white transition-colors">
+                  {feature.description}
+                </p>
+                {/* Hover Effect */}
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+              </div>
+            ))}
           </div>
         </section>
 
         {/* Spline 3D Showcase Section */}
         <section className="relative py-32">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              {/* Left: 3D Spline Scene */}
-              <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-                viewport={{ once: true }}
-                className="relative h-[500px] rounded-2xl overflow-hidden"
-              >
-                <SafeSpline 
-                  scene="https://prod.spline.design/bnMPTJ7gd0k0pKh1/scene.splinecode"
-                  className="w-full h-full rounded-2xl"
-                />
-              </motion.div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left: 3D Spline Scene */}
+            <div className="relative h-[500px] rounded-2xl overflow-hidden" style={{ transform: 'translateX(-20px)', width: 'calc(100% + 40px)', marginLeft: '-20px' }}>
+              <SafeSpline scene="https://prod.spline.design/bnMPTJ7gd0k0pKh1/scene.splinecode" className="w-full h-full rounded-2xl" />
+            </div>
 
-              {/* Right: Content */}
-              <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 0.2 }}
-                viewport={{ once: true }}
-                className="text-center lg:text-left"
-              >
-                <motion.div
-                  className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Globe className="h-5 w-5 text-cyan-400" />
-                  </motion.div>
-                  <span className="text-white font-medium">3D Interactive Experience</span>
-                </motion.div>
-                
-                <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                  Experience the Future of
-                  <span className="block bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                    Content Creation
-                  </span>
-                </h2>
-                <p className="text-xl text-purple-200 mb-8 leading-relaxed">
-                  Immerse yourself in our revolutionary 3D workspace where creativity meets technology. 
-                  Explore features, visualize your content strategy, and discover new possibilities in an 
-                  interactive environment designed for the next generation of creators.
-                </p>
+            {/* Right: Content */}
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20">
+                <Globe className="h-5 w-5 text-cyan-400" />
+                <span className="text-white font-medium">3D Interactive Experience</span>
+              </div>
+              
+              <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+                Experience the Future of
+                <span className="block bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  Content Creation
+                </span>
+              </h2>
+              <p className="text-xl text-purple-200 mb-8 leading-relaxed">
+                Immerse yourself in our revolutionary 3D workspace where creativity meets technology. 
+                Explore features, visualize your content strategy, and discover new possibilities in an 
+                interactive environment designed for the next generation of creators.
+              </p>
 
-                <div className="space-y-4 mb-8">
-                  <motion.div 
-                    className="flex items-center space-x-3"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
-                    <span className="text-purple-200">Interactive 3D workspace navigation</span>
-                  </motion.div>
-                  <motion.div 
-                    className="flex items-center space-x-3"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <span className="text-purple-200">Real-time content preview and editing</span>
-                  </motion.div>
-                  <motion.div 
-                    className="flex items-center space-x-3"
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                    <span className="text-purple-200">Immersive analytics and insights</span>
-                  </motion.div>
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+                  <span className="text-purple-200">Interactive 3D workspace navigation</span>
                 </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  <span className="text-purple-200">Real-time content preview and editing</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                  <span className="text-purple-200">Immersive analytics and insights</span>
+                </div>
+              </div>
 
-                <motion.button
-                  onClick={handleGetStarted}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all shadow-2xl hover:shadow-cyan-500/25 flex items-center space-x-2 mx-auto lg:mx-0"
-                  whileHover={{ scale: 1.05, y: -3 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span>Explore in 3D</span>
-                  <ArrowRight className="h-5 w-5" />
-                </motion.button>
-              </motion.div>
+              <button onClick={handleGetStarted} className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all shadow-2xl hover:shadow-cyan-500/25 flex items-center space-x-2 mx-auto lg:mx-0">
+                <span>Explore in 3D</span>
+                <ArrowRight className="h-5 w-5" />
+              </button>
             </div>
           </div>
         </section>
@@ -673,20 +456,11 @@ export function LandingPage() {
         {/* Testimonials Section */}
         <section className="relative py-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              className="text-center mb-20"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <motion.div
-                className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20"
-                whileHover={{ scale: 1.05 }}
-              >
+            <div className="text-center mb-20">
+              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20">
                 <Heart className="h-5 w-5 text-pink-400" />
                 <span className="text-white font-medium">Success Stories</span>
-              </motion.div>
+              </div>
               
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
                 Loved by
@@ -698,25 +472,16 @@ export function LandingPage() {
                 Join thousands of creators who have transformed their content strategy and grown their audience 
                 exponentially with CreatorCopilot's AI-powered tools.
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={index}
-                  className="group bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -5, scale: 1.02 }}
-                >
+                <div key={index} className="group bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all">
                   <div className="flex items-center mb-6">
-                    <motion.img 
+                    <img 
                       src={testimonial.avatar} 
                       alt={testimonial.name}
                       className="w-16 h-16 rounded-full mr-4 border-2 border-purple-400"
-                      whileHover={{ scale: 1.1 }}
                     />
                     <div>
                       <div className="text-white font-semibold text-lg">{testimonial.name}</div>
@@ -747,7 +512,7 @@ export function LandingPage() {
                       </motion.div>
                     ))}
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -756,20 +521,11 @@ export function LandingPage() {
         {/* Pricing Section */}
         <section id="pricing" className="relative py-32">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              className="text-center mb-20"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <motion.div
-                className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20"
-                whileHover={{ scale: 1.05 }}
-              >
+            <div className="text-center mb-20">
+              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20">
                 <Crown className="h-5 w-5 text-yellow-400" />
                 <span className="text-white font-medium">Simple Pricing</span>
-              </motion.div>
+              </div>
               
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
                 Choose Your
@@ -780,7 +536,7 @@ export function LandingPage() {
               <p className="text-xl text-purple-200 max-w-4xl mx-auto leading-relaxed">
                 Start free and scale as you grow. Every plan includes our core AI features with no hidden fees or surprises.
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {pricingPlans.map((plan, index) => (
