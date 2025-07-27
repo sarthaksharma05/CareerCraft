@@ -292,18 +292,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           </div>
         </div>
 
-        {/* Made by bolt.new sticker */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
-          <a 
-            href="https://bolt.new" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center space-x-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs px-3 py-1 rounded-b-lg shadow-md hover:from-blue-700 hover:to-purple-700 transition-all"
-          >
-            <Zap className="h-3 w-3" />
-            <span>Made by bolt.new</span>
-          </a>
-        </div>
+        {/* Made by bolt.new tag removed */}
 
         <div className="flex items-center space-x-4">
           {/* Demo Mode Indicator */}

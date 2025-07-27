@@ -212,7 +212,7 @@ export function LandingPage() {
       name: 'Sarah Johnson',
       role: 'Lifestyle Creator',
       content: 'CreatorCopilot transformed my content strategy completely. I went from 10K to 500K followers in just 8 months using their AI tools!',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+      avatar: '/ava2.jpg',
       followers: '500K',
       platform: 'Instagram'
     },
@@ -296,19 +296,6 @@ export function LandingPage() {
                   CreatorCopilot
                 </Link>
               </motion.div>
-
-              {/* Made by bolt.new sticker */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 top-0">
-                <a 
-                  href="https://bolt.new" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 bg-gradient-to-r from-white to-gray-300 text-black text-xs px-3 py-1 rounded-b-lg shadow-md hover:from-gray-100 hover:to-gray-200 transition-all"
-                >
-                  <Zap className="h-3 w-3" />
-                  <span>Made by bolt.new</span>
-                </a>
-              </div>
 
               {/* Desktop Navigation */}
               <nav className="hidden md:flex items-center space-x-8">
@@ -1056,18 +1043,6 @@ export function LandingPage() {
                 ))}
               </div>
               
-              {/* Made by bolt.new sticker in footer */}
-              <div className="mt-4 md:mt-0">
-                <a 
-                  href="https://bolt.new" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs px-3 py-1 rounded-lg shadow-md hover:from-blue-700 hover:to-purple-700 transition-all"
-                >
-                  <Zap className="h-3 w-3" />
-                  <span>Made by bolt.new</span>
-                </a>
-              </div>
             </div>
           </div>
         </footer>
