@@ -33,7 +33,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     { name: 'Voiceovers', href: '/app/voiceovers', icon: Mic },
     { name: 'AI Videos', href: '/app/videos', icon: Video },
     { name: 'TrendRadar', href: '/app/trends', icon: TrendingUp },
-    { name: 'Campaigns', href: '/app/campaigns', icon: Briefcase },
+    { name: 'ATS Checker', href: '/app/campaigns', icon: Briefcase },
     { name: 'Analytics', href: '/app/analytics', icon: BarChart3 },
     { name: 'Profile', href: '/app/profile', icon: User },
     { name: 'Billing', href: '/app/billing', icon: CreditCard },
@@ -178,7 +178,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 >
                   <Sparkles className="h-8 w-8 text-white" />
                 </motion.div>
-                <span className="text-xl font-bold text-white">CreatorCopilot</span>
+                <span className="text-xl font-bold text-white">CareerCraft</span>
               </motion.div>
               
               {/* Demo Mode Indicator */}

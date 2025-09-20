@@ -31,7 +31,7 @@ function App() {
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-white flex items-center justify-center">
         <div className="text-center">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 max-w-md">
-            <h2 className="text-2xl font-bold text-white mb-3">CreatorCopilot</h2>
+            <h2 className="text-2xl font-bold text-white mb-3">CareerCraft</h2>
             <p className="text-gray-200 mb-4">Initializing your creative workspace...</p>
             
             {/* Progress dots */}

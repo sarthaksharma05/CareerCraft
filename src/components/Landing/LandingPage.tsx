@@ -158,8 +158,8 @@ export function LandingPage() {
   const features = [
     {
       icon: Brain,
-      title: 'AI Content Generation',
-      description: 'Create engaging scripts, captions, and ideas with advanced AI technology that understands your brand voice',
+      title: 'Smart Formating ',
+      description: 'Transform your resume with AI power',
       gradient: 'from-gray-400 via-white to-gray-300',
       delay: 0.1
     },
@@ -179,22 +179,22 @@ export function LandingPage() {
     },
     {
       icon: TrendingUp,
-      title: 'Trend Analysis',
-      description: 'Stay ahead with real-time trending topics and content opportunities powered by AI insights',
+      title: 'ATS Optimization',
+      description: 'Ensure your resume passes through Applicant Tracking Systems with our advanced optimization algorithms.',
       gradient: 'from-gray-700 via-white to-gray-600',
       delay: 0.4
     },
     {
       icon: Users,
-      title: 'Brand Partnerships',
-      description: 'Connect with premium brands and monetize your content through our exclusive marketplace',
+      title: 'Privacy Protected',
+      description: 'Your data is secure with enterprise-grade encryption and strict privacy controls',
       gradient: 'from-gray-800 via-white to-gray-700',
       delay: 0.5
     },
     {
       icon: Target,
-      title: 'Analytics & Insights',
-      description: 'Track performance, understand your audience, and optimize your content strategy with detailed analytics',
+      title: 'Instant Results',
+      description: 'Get your optimized resume in seconds, not hours. Fast turnaround for urgent applications.',
       gradient: 'from-gray-900 via-white to-gray-800',
       delay: 0.6
     }
@@ -210,27 +210,25 @@ export function LandingPage() {
   const testimonials = [
     {
       name: 'Sarah Johnson',
-      role: 'Lifestyle Creator',
-      content: 'CreatorCopilot transformed my content strategy completely. I went from 10K to 500K followers in just 8 months using their AI tools!',
+      role: 'Software Engineer at Google',
+      content: 'ResumeAI Pro helped me land my dream job at Google. The ATS optimization was incredible!',
       avatar: '/ava2.jpg',
-      followers: '500K',
-      platform: 'Instagram'
+      
+      
     },
     {
       name: 'Mike Chen',
-      role: 'Tech Reviewer',
-      content: 'The AI-generated scripts are incredibly natural and engaging. My audience retention increased by 400% since I started using CreatorCopilot.',
+      role: 'Marketing Director',
+      content: 'CareerCraft streamlined our content production, allowing us to scale our campaigns effortlessly. The AI tools are top-notch!',
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-      followers: '2.1M',
-      platform: 'YouTube'
+      
     },
     {
       name: 'Emma Davis',
       role: 'Fitness Influencer',
-      content: 'The voiceover and video features are game-changers. Professional quality content without the studio costs or technical complexity.',
+      content: 'The cover letter generator saved me hours of work. Professional and tailored perfectly.',
       avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-      followers: '750K',
-      platform: 'TikTok'
+     
     }
   ];
 
@@ -284,7 +282,7 @@ export function LandingPage() {
                 <Sparkles className="h-8 w-8 text-black" />
               </div>
               <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-                CreatorCopilot
+                CareerCraft
               </Link>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
@@ -334,17 +332,16 @@ export function LandingPage() {
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-white/20">
                 <Zap className="h-5 w-5 text-yellow-400" />
-                <span className="text-white font-medium">AI-Powered Content Creation Platform</span>
+                <span className="text-white font-medium">AI-Powered Smart Formating  Platform</span>
               </div>
               <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-                Create Content That
+                Transform your resume
                 <span className="block bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
-                  Captivates & Converts
+                  with AI Power
                 </span>
               </h1>
               <p className="text-xl text-gray-200 mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed">
-                Transform your creative process with our comprehensive AI-powered platform. Generate scripts, create voiceovers, 
-                produce videos, discover trends, and connect with brands - all in one revolutionary workspace designed for modern creators.
+                Get noticed by employers with our advanced AI resume optimizer. Beat ATS systems, highlight your strengths, and land your dream job faster than ever before.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-6 mb-16">
                 <button onClick={handleGetStarted} className="bg-gradient-to-r from-white to-gray-300 text-black px-8 py-4 rounded-full text-lg font-semibold hover:from-gray-100 hover:to-gray-200 transition-all shadow-2xl hover:shadow-white/25 flex items-center space-x-2">
@@ -419,31 +416,14 @@ export function LandingPage() {
               </div>
               
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                Experience the Future of
+                Ready to transform
                 <span className="block bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  Content Creation
+                  your career
                 </span>
               </h2>
               <p className="text-xl text-purple-200 mb-8 leading-relaxed">
-                Immerse yourself in our revolutionary 3D workspace where creativity meets technology. 
-                Explore features, visualize your content strategy, and discover new possibilities in an 
-                interactive environment designed for the next generation of creators.
+                Join thousands of professionals who have elevated their resumes and landed their dream jobs with CareerCraft's AI-powered tools.
               </p>
-
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
-                  <span className="text-purple-200">Interactive 3D workspace navigation</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                  <span className="text-purple-200">Real-time content preview and editing</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                  <span className="text-purple-200">Immersive analytics and insights</span>
-                </div>
-              </div>
 
               <button onClick={handleGetStarted} className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all shadow-2xl hover:shadow-cyan-500/25 flex items-center space-x-2 mx-auto lg:mx-0">
                 <span>Explore in 3D</span>
@@ -470,7 +450,7 @@ export function LandingPage() {
               </h2>
               <p className="text-xl text-purple-200 max-w-4xl mx-auto leading-relaxed">
                 Join thousands of creators who have transformed their content strategy and grown their audience 
-                exponentially with CreatorCopilot's AI-powered tools.
+                exponentially with CareerCraft's AI-powered tools.
               </p>
             </div>
 
@@ -530,7 +510,7 @@ export function LandingPage() {
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
                 Choose Your
                 <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
-                  {' '}Creative Journey
+                  {' '}Career Journey
                 </span>
               </h2>
               <p className="text-xl text-purple-200 max-w-4xl mx-auto leading-relaxed">
@@ -654,13 +634,13 @@ export function LandingPage() {
                 <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
                   Ready to Transform Your
                   <span className="block bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
-                    Content Creation?
+                    Smart Formating ?
                   </span>
                 </h2>
 
                 <p className="text-xl text-purple-200 mb-10 max-w-3xl mx-auto leading-relaxed">
-                  Join over 100,000 creators who are already using CreatorCopilot to create content that captivates, 
-                  engages, and converts. Start your free trial today and experience the future of content creation.
+                  Join over 100,000 creators who are already using CareerCraft to create content that captivates, 
+                  engages, and converts. Start your free trial today and experience the future of Smart Formating .
                 </p>
 
                 <motion.button
@@ -681,46 +661,7 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* Section: Creative Partner (the one with three icons and descriptions) */}
-        <section className="py-24">
-          <div className="max-w-5xl mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-20 text-white">
-              We're not just another AI tool. We're your creative partner, designed specifically for content creators.
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-              <div>
-                <span className="mx-auto mb-8 block w-fit">
-                  <span className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-4 inline-flex items-center justify-center">
-                    <Crown className="h-16 w-16 text-white" />
-                  </span>
-                </span>
-                <p className="text-lg font-semibold text-white">
-                  Our AI models are specifically trained on high-performing content, ensuring professional results every time.
-                </p>
-              </div>
-              <div>
-                <span className="mx-auto mb-8 block w-fit">
-                  <span className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-4 inline-flex items-center justify-center">
-                    <Zap className="h-16 w-16 text-white" />
-                  </span>
-                </span>
-                <p className="text-lg font-semibold text-white">
-                  Generate content in seconds, not hours. Our optimized infrastructure ensures rapid response times.
-                </p>
-              </div>
-              <div>
-                <span className="mx-auto mb-8 block w-fit">
-                  <span className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full p-4 inline-flex items-center justify-center">
-                    <Star className="h-16 w-16 text-white" />
-                  </span>
-                </span>
-                <p className="text-lg font-semibold text-white">
-                  Built by creators, for creators. Every feature is designed to solve real content creation challenges.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        
 
         {/* Footer */}
         <footer className="relative bg-black/20 backdrop-blur-md border-t border-white/20">
@@ -736,12 +677,11 @@ export function LandingPage() {
                     <Sparkles className="h-6 w-6 text-white" />
                   </motion.div>
                   <span className="text-xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                    CreatorCopilot
+                    CareerCraft
                   </span>
                 </div>
                 <p className="text-purple-200 mb-6 max-w-md leading-relaxed">
-                  Empowering creators worldwide with AI-powered tools to create, optimize, and monetize their content. 
-                  Join the future of content creation today.
+                  Transform your career with AI-powered resume optimization. Get noticed by employers and land your dream job with our advanced ATS-friendly resume builder.
                 </p>
                 <div className="flex space-x-4">
                   {['Twitter', 'Instagram', 'LinkedIn', 'YouTube'].map((social, index) => (
@@ -789,7 +729,7 @@ export function LandingPage() {
 
             <div className="border-t border-white/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
               <p className="text-purple-200 text-sm">
-                © 2024 CreatorCopilot. All rights reserved.
+                © 2024 CareerCraft. All rights reserved.
               </p>
               <div className="flex space-x-6 mt-4 md:mt-0">
                 {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map((item) => (

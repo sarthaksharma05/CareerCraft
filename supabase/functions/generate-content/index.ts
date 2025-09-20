@@ -1,4 +1,4 @@
-// This edge function handles AI content generation with OpenAI
+// This edge function handles Smart Formating  with OpenAI
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.39.0";
 import OpenAI from "npm:openai@4.20.1";
@@ -114,7 +114,7 @@ serve(async (req) => {
       messages: [
         {
           role: "system",
-          content: "You are CreatorCopilot, an AI assistant specialized in helping content creators generate high-quality, engaging content across social media platforms."
+          content: "You are CareerCraftssistant specialized in helping content creators generate high-quality, engaging content across social media platforms."
         },
         {
           role: "user",

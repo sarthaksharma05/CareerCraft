@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { 
   Lightbulb, 
   MessageSquare, 
@@ -7,6 +7,7 @@ import {
   FileText, 
   Wand2,
   Copy,
+  Briefcase,
   Save,
   Download,
   Crown
@@ -15,11 +16,12 @@ import { generateContent as geminiGenerateContent } from '../../lib/gemini';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
+import confetti from 'canvas-confetti';
 
 interface ContentForm {
   type: string;
   niche: string;
-  platform: string;
+  platform: string; // This will now be 'Job Role'
   additionalContext: string;
 }
 
@@ -28,31 +30,79 @@ export function ContentGenerator() {
   const [loading, setLoading] = useState(false);
   const [generatedContent, setGeneratedContent] = useState('');
   const [contentTitle, setContentTitle] = useState('');
+  const [loadingText, setLoadingText] = useState('Generating...');
   
-  const { register, handleSubmit, watch } = useForm<ContentForm>({
+  const { register, handleSubmit, watch, setValue, control } = useForm<ContentForm>({
     defaultValues: {
-      type: 'ideas',
+      type: 'cover-letter',
       niche: profile?.niche || '',
-      platform: 'instagram',
+      platform: '', // Changed from 'instagram'
       additionalContext: '',
     }
   });
+  const selectedJobRole = useWatch({ control, name: 'platform' });
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (loading) {
+      const texts = [
+        'Thinking of great ideas...',
+        'Writing a viral script...',
+        'Crafting the perfect caption...',
+        'Finding trending hashtags...',
+        'Polishing the content...'
+      ];
+      let i = 0;
+      setLoadingText(texts[i]);
+      interval = setInterval(() => setLoadingText(texts[++i % texts.length]), 2000);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  const resumeTemplates: { [key: string]: string } = {
+    'software-engineer': `Job Description:
+Seeking a Software Engineer with 5+ years of experience in React, Node.js, and AWS. Responsibilities include developing new user-facing features, building reusable code, and optimizing applications for maximum speed and scalability.
+
+My Experience:
+I am a full-stack developer with 6 years of experience, specializing in the MERN stack. I have a proven track record of leading projects from conception to deployment. Proficient in CI/CD pipelines and agile methodologies.
+`,
+    'product-manager': `Job Description:
+We are looking for an experienced Product Manager to lead our mobile application team. You will be responsible for the product planning and execution throughout the Product Lifecycle, including gathering and prioritizing product and customer requirements.
+
+My Experience:
+As a Product Manager for 5 years, I have successfully launched three major products, resulting in a 40% increase in user engagement. I am skilled in market research, user story creation, and A/B testing.
+`,
+    'ux-designer': `Job Description:
+Seeking a talented UX Designer to create amazing user experiences. The ideal candidate should have an eye for clean and artful design, possess superior UX skills and be able to translate high-level requirements into interaction flows and artifacts.
+
+My Experience:
+I am a UX Designer with a strong portfolio of mobile and web applications. I am proficient in Figma, Sketch, and Adobe XD. My design process is user-centric, and I have extensive experience with usability testing and creating design systems.
+`,
+  };
+
+  useEffect(() => {
+    if (selectedJobRole && resumeTemplates[selectedJobRole]) {
+      setValue('additionalContext', resumeTemplates[selectedJobRole]);
+    } else {
+      setValue('additionalContext', '');
+    }
+  }, [selectedJobRole, setValue]);
 
   const isPro = profile?.is_pro || false;
 
   const contentTypes = [
-    { value: 'ideas', label: 'Content Ideas', icon: Lightbulb, pro: false },
-    { value: 'script', label: 'Video Script', icon: FileText, pro: true },
-    { value: 'caption', label: 'Social Caption', icon: MessageSquare, pro: false },
-    { value: 'hashtags', label: 'Hashtags', icon: Hash, pro: false },
+    { value: 'cover-letter', label: 'Cover Letter', icon: FileText, pro: false },
+    { value: 'resume-summary', label: 'Resume Summary', icon: MessageSquare, pro: false },
+    { value: 'bullet-points', label: 'Job Bullet Points', icon: Lightbulb, pro: false },
+    { value: 'linkedin-summary', label: 'LinkedIn Summary', icon: Briefcase, pro: true },
   ];
 
   const platforms = [
-    { value: 'instagram', label: 'Instagram' },
-    { value: 'tiktok', label: 'TikTok' },
-    { value: 'youtube', label: 'YouTube' },
-    { value: 'twitter', label: 'Twitter' },
-    { value: 'linkedin', label: 'LinkedIn' },
+    { value: 'software-engineer', label: 'Software Engineer' },
+    { value: 'product-manager', label: 'Product Manager' },
+    { value: 'data-scientist', label: 'Data Scientist' },
+    { value: 'ux-designer', label: 'UX Designer' },
+    { value: 'marketing-manager', label: 'Marketing Manager' },
+    { value: 'project-manager', label: 'Project Manager' },
   ];
 
   const niches = [
@@ -76,7 +126,14 @@ export function ContentGenerator() {
       );
       
       setGeneratedContent(content);
-      setContentTitle(`${data.type.charAt(0).toUpperCase() + data.type.slice(1)} for ${data.niche} on ${data.platform}`);
+      setContentTitle(`${data.type.charAt(0).toUpperCase() + data.type.slice(1)} for a ${data.platform}`);
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#8B5CF6', '#EC4899', '#10B981', '#F59E0B']
+      });
+      toast.success('Content generated successfully!');
       
     } catch (error) {
       toast.error('Failed to generate content');
@@ -140,41 +197,44 @@ export function ContentGenerator() {
               {contentTypes.map((type) => {
                 const isLocked = type.pro && !isPro;
                 return (
-                  <label key={type.value} className={`relative rounded-lg transition-all duration-300 ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}>
-                    <input
-                      {...register('type')}
-                      type="radio"
-                      value={type.value}
-                      className="sr-only peer"
-                      disabled={isLocked}
-                    />
-                    <div className={`flex flex-col items-center p-4 border-2 rounded-lg ${
-                      watch('type') === type.value
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200'
-                    } ${isLocked ? 'bg-gray-100' : 'cursor-pointer hover:border-primary-300 peer-checked:border-primary-500 peer-checked:bg-primary-50'}`}>
-                      <type.icon className="h-6 w-6 text-gray-400 peer-checked:text-primary-600 mb-2" />
-                      <span className="text-sm font-medium text-gray-700 peer-checked:text-primary-700">
-                        {type.label}
-                      </span>
-                    </div>
-                    {isLocked && (
-                      <div className="absolute top-2 right-2 flex items-center space-x-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-0.5 rounded-full text-xs font-bold">
-                        <Crown className="h-3 w-3" />
-                        <span>PRO</span>
+                  <div key={type.value}>
+                    <label className={`relative rounded-lg transition-all duration-300 ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                      <input
+                        {...register('type')}
+                        type="radio"
+                        value={type.value}
+                        className="sr-only peer"
+                        disabled={isLocked}
+                        aria-label={type.label}
+                      />
+                      <div className={`flex flex-col items-center p-4 border-2 rounded-lg ${
+                        watch('type') === type.value
+                          ? 'border-primary-500 bg-primary-50'
+                          : 'border-gray-200'
+                      } ${isLocked ? 'bg-gray-100' : 'cursor-pointer hover:border-primary-300 peer-checked:border-primary-500 peer-checked:bg-primary-50'}`}>
+                        <type.icon className="h-6 w-6 text-gray-400 peer-checked:text-primary-600 mb-2" />
+                        <span className="text-sm font-medium text-gray-700 peer-checked:text-primary-700">
+                          {type.label}
+                        </span>
                       </div>
-                    )}
-                  </label>
-                )
+                      {isLocked && (
+                        <div className="absolute top-2 right-2 flex items-center space-x-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-0.5 rounded-full text-xs font-bold">
+                          <Crown className="h-3 w-3" />
+                          <span>PRO</span>
+                        </div>
+                      )}
+                    </label>
+                  </div>
+                );
               })}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Niche Selection */}
-            <div>
+            <div className="hidden">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Niche
+                Industry
               </label>
               <select
                 {...register('niche')}
@@ -191,8 +251,8 @@ export function ContentGenerator() {
 
             {/* Platform Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Platform
+              <label htmlFor="jobRole" className="block text-sm font-medium text-gray-700 mb-2">
+                Job Role
               </label>
               <select
                 {...register('platform')}
@@ -210,7 +270,7 @@ export function ContentGenerator() {
           {/* Additional Context */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Additional Context (Optional)
+              Job Description & Your Experience
             </label>
             <textarea
               {...register('additionalContext')}
@@ -228,7 +288,7 @@ export function ContentGenerator() {
             {loading ? (
               <div className="flex items-center justify-center space-x-2">
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Generating...</span>
+                <span>{loadingText}</span>
               </div>
             ) : (
               'Generate Content'

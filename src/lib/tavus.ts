@@ -399,7 +399,7 @@ export class TavusService {
       return {
         status: 'active',
         lastResponse: {
-          message: "I'm here and ready to help you with CreatorCopilot!",
+          message: "I'm here and ready to help you with CareerCraft!",
           audioUrl: null,
           videoUrl: null,
           isSpeaking: false
@@ -553,11 +553,11 @@ export class TavusService {
   // Simulate avatar response for demo
   private simulateAvatarResponse(userMessage: string) {
     const responses = [
-      "That's a great question! CreatorCopilot can definitely help you with that.",
+      "That's a great question! CareerCraft can definitely help you with that.",
       "I understand what you're looking for. Let me explain how our AI tools can assist you.",
-      "Absolutely! Our platform is designed to make content creation easier and more effective.",
-      "That's exactly what CreatorCopilot excels at. Would you like me to show you how?",
-      "Perfect! I can guide you through the best features for your content creation needs."
+      "Absolutely! Our platform is designed to make Smart Formating  easier and more effective.",
+      "That's exactly what CareerCraft excels at. Would you like me to show you how?",
+      "Perfect! I can guide you through the best features for your Smart Formating  needs."
     ];
 
     const randomResponse = responses[Math.floor(Math.random() * responses.length)];

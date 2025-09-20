@@ -125,7 +125,7 @@ export class SocialMediaService {
             },
             {
               id: '2',
-              content: 'My Content Creation Setup Tour 2024',
+              content: 'My Smart Formating  Setup Tour 2024',
               date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
               likes: 1890,
               comments: 145,
@@ -297,7 +297,7 @@ export class SocialMediaService {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       return {
-        downloadUrl: `https://api.creatorcopilot.com/exports/${userId}-${platform}-${Date.now()}.${format}`,
+        downloadUrl: `https://api.CareerCraft.com/exports/${userId}-${platform}-${Date.now()}.${format}`,
         filename: `${platform}-analytics-${new Date().toISOString().split('T')[0]}.${format}`
       };
     } catch (error) {

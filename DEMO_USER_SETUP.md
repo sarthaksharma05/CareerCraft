@@ -15,7 +15,7 @@ The app now automatically tries to create the demo user when you click "Try Demo
 
 2. **Create Demo User**
    - Click **"Add user"**
-   - Email: `demo@creatorcopilot.com`
+   - Email: `demo@CareerCraft.com`
    - Password: `demo123456`
    - **Important**: Uncheck "Email confirmation required" or confirm the email manually
 
@@ -26,11 +26,11 @@ The app now automatically tries to create the demo user when you click "Try Demo
    ```json
    {
      "id": "[USER_ID_FROM_STEP_2]",
-     "email": "demo@creatorcopilot.com",
+     "email": "demo@CareerCraft.com",
      "full_name": "Demo User",
      "avatar_url": null,
      "niche": "Technology",
-     "bio": "Demo user for CreatorCopilot",
+     "bio": "Demo user for CareerCraft",
      "social_links": {},
      "follower_count": 1250,
      "is_pro": false
@@ -58,7 +58,7 @@ INSERT INTO auth.users (
   recovery_token
 ) VALUES (
   gen_random_uuid(),
-  'demo@creatorcopilot.com',
+  'demo@CareerCraft.com',
   crypt('demo123456', gen_salt('bf')),
   now(),
   now(),
@@ -86,12 +86,12 @@ INSERT INTO profiles (
   created_at,
   updated_at
 ) VALUES (
-  (SELECT id FROM auth.users WHERE email = 'demo@creatorcopilot.com'),
-  'demo@creatorcopilot.com',
+  (SELECT id FROM auth.users WHERE email = 'demo@CareerCraft.com'),
+  'demo@CareerCraft.com',
   'Demo User',
   null,
   'Technology',
-  'Demo user for CreatorCopilot',
+  'Demo user for CareerCraft',
   '{}',
   1250,
   false,
@@ -138,7 +138,7 @@ INSERT INTO profiles (
 
 ## Demo User Details
 
-- **Email**: `demo@creatorcopilot.com`
+- **Email**: `demo@CareerCraft.com`
 - **Password**: `demo123456`
 - **Name**: Demo User
 - **Niche**: Technology

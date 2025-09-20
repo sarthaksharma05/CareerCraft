@@ -1,138 +1,156 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, Rss, Mail, Search, Edit3, Share2, DollarSign } from 'lucide-react';
+import { Zap, CheckCircle, XCircle, RefreshCw, Download } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { generateContent as geminiGenerateContent } from '../../lib/gemini';
+import jsPDF from 'jspdf';
+
+interface ATSResult {
+  score: number;
+  summary: string;
+  strengths: string[];
+  improvements: string[];
+  refined_resume: string;
+}
 
 export function CampaignMarketplace() {
-  const processSteps = [
-    {
-      icon: Search,
-      title: 'Discover Campaigns',
-      description: 'Browse exclusive opportunities from leading brands that match your niche.',
-      color: 'purple'
-    },
-    {
-      icon: Edit3,
-      title: 'Apply & Pitch',
-      description: 'Craft your unique proposal and apply to the campaigns that excite you most.',
-      color: 'pink'
-    },
-    {
-      icon: Share2,
-      title: 'Collaborate',
-      description: 'Work directly with brands to produce authentic and engaging content.',
-      color: 'indigo'
-    },
-    {
-      icon: DollarSign,
-      title: 'Get Paid',
-      description: 'Receive secure and timely payments right after your successful collaboration.',
-      color: 'emerald'
+  const [loading, setLoading] = useState(false);
+  const [resumeText, setResumeText] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
+  const [atsResult, setAtsResult] = useState<ATSResult | null>(null);
+
+  const checkATSScore = async () => {
+    if (!resumeText || !jobDescription) {
+      toast.error('Please provide both your resume and a job description.');
+      return;
     }
-  ];
+    setLoading(true);
+    setAtsResult(null);
+
+    try {
+      const prompt = `
+        Analyze the following resume against the job description. 
+        Provide an ATS score, a summary, strengths, areas for improvement, and a refined version of the resume.
+        Format the output as a JSON object with this exact structure:
+        {
+          "score": <number between 0-100>,
+          "summary": "<one-sentence summary of the match>",
+          "strengths": ["<strength 1>", "<strength 2>", ...],
+          "improvements": ["<improvement 1>", "<improvement 2>", ...],
+          "refined_resume": "<the full text of the refined resume, formatted with newlines>"
+        }
+
+        IMPORTANT: Respond with ONLY valid JSON. Do not include markdown, explanations, or text outside the JSON.
+
+        Resume:
+        ${resumeText}
+
+        Job Description:
+        ${jobDescription}
+      `;
+
+      let raw = await geminiGenerateContent(prompt);
+
+      // Extract JSON safely
+      const jsonMatch = raw.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('Invalid response from AI');
+      const result: ATSResult = JSON.parse(jsonMatch[0]);
+
+      setAtsResult(result);
+      toast.success('ATS analysis complete!');
+    } catch (error) {
+      console.error('Error checking ATS score:', error);
+      toast.error('Failed to analyze resume. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const downloadRefinedPDF = () => {
+    if (!atsResult || !atsResult.refined_resume) return;
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    doc.text(atsResult.refined_resume, 10, 10, { maxWidth: 190 });
+    doc.save('refined_resume.pdf');
+    toast.success('Refined resume downloaded!');
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5
-      }
-    }
+    visible: { y: 0, opacity: 1 },
   };
 
-  const iconColors = {
-    purple: 'bg-purple-100 text-purple-600',
-    pink: 'bg-pink-100 text-pink-600',
-    indigo: 'bg-indigo-100 text-indigo-600',
-    emerald: 'bg-emerald-100 text-emerald-600'
-  }
-
   return (
-    <div className="flex items-center justify-center min-h-full bg-gradient-to-br from-gray-50 to-blue-50 p-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center bg-white p-8 sm:p-12 rounded-2xl shadow-2xl max-w-4xl w-full border border-gray-100"
-      >
-        <motion.div
-          animate={{
-            scale: [1, 1.05, 1],
-          }}
-          transition={{
-            duration: 3,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatType: "mirror"
-          }}
-          className="inline-block p-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6"
-        >
-          <Briefcase className="h-12 w-12 text-white" />
-        </motion.div>
+    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
+      <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">ATS Resume Checker</h1>
 
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-gray-900 mb-4">
-          The Future of Brand Deals is Coming
-        </h1>
-        
-        <p className="text-md sm:text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
-          Our Campaign Marketplace will be an exclusive hub for creators to connect with top brands, manage partnerships, and monetize their content seamlessly.
-        </p>
-
-        {/* Process Steps */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 my-12 text-left"
-        >
-          {processSteps.map((step, index) => (
-            <motion.div key={index} variants={itemVariants} className="flex flex-col items-center text-center">
-              <div className={`p-4 rounded-full mb-4 ${iconColors[step.color]}`}>
-                <step.icon className="h-8 w-8" />
-              </div>
-              <h3 className="font-bold text-lg text-gray-800 mb-1">{step.title}</h3>
-              <p className="text-sm text-gray-500">{step.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-        
-        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mt-8">
-          <h3 className="text-lg font-semibold text-gray-800 mb-2 flex items-center justify-center">
-            <Rss className="h-5 w-5 mr-2 text-purple-600" />
-            Be the First to Know
-          </h3>
-          <p className="text-sm text-gray-500 mb-4">
-            Join our launch list and get priority access when the Marketplace goes live.
-          </p>
-          <form className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-lg mx-auto">
-            <input
-              type="email"
-              placeholder="Your best email address"
-              className="w-full sm:w-auto flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-              aria-label="Email for notification"
-            />
-            <button
-              type="submit"
-              className="w-full sm:w-auto bg-gray-900 text-white font-semibold px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center shadow-md hover:shadow-lg"
-            >
-              <Mail className="h-4 w-4 mr-2" />
-              Notify Me
-            </button>
-          </form>
+        {/* Resume Textarea */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Paste Your Resume</label>
+          <textarea
+            rows={8}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            placeholder="Paste your resume here..."
+            value={resumeText}
+            onChange={(e) => setResumeText(e.target.value)}
+          />
         </div>
+
+        {/* Job Description Textarea */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Paste Job Description</label>
+          <textarea
+            rows={8}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            placeholder="Paste the full job description here..."
+            value={jobDescription}
+            onChange={(e) => setJobDescription(e.target.value)}
+          />
+        </div>
+
+        <button
+          onClick={checkATSScore}
+          disabled={loading || !resumeText || !jobDescription}
+          className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white py-3 px-4 rounded-lg font-medium disabled:opacity-50"
+        >
+          {loading ? <><RefreshCw className="h-5 w-5 animate-spin" /><span>Analyzing...</span></> :
+          <><Zap className="h-5 w-5" /><span>Check ATS Score</span></>}
+        </button>
       </motion.div>
-    </div>
+
+      {atsResult && (
+        <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+          <p className="text-xl font-bold mb-2">ATS Match Score: {atsResult.score}%</p>
+          <p className="mb-4">{atsResult.summary}</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <div>
+              <h3 className="font-semibold mb-2 flex items-center"><CheckCircle className="h-5 w-5 text-green-500 mr-2"/>Strengths</h3>
+              <ul className="list-disc list-inside text-sm">{atsResult.strengths.map((item, i) => <li key={i}>{item}</li>)}</ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2 flex items-center"><XCircle className="h-5 w-5 text-red-500 mr-2"/>Improvements</h3>
+              <ul className="list-disc list-inside text-sm">{atsResult.improvements.map((item, i) => <li key={i}>{item}</li>)}</ul>
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2">Refined Resume</h3>
+            <pre className="bg-gray-50 p-4 rounded-lg text-sm whitespace-pre-wrap">{atsResult.refined_resume}</pre>
+          </div>
+
+          <button onClick={downloadRefinedPDF} className="flex items-center space-x-2 bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700">
+            <Download className="h-5 w-5"/>
+            <span>Download Refined PDF</span>
+          </button>
+        </motion.div>
+      )}
+    </motion.div>
   );
 }

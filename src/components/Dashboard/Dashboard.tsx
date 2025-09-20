@@ -107,7 +107,7 @@ export function Dashboard() {
 
   const quickActions = [
     {
-      title: 'AI Content Generator',
+      title: 'Smart Formating ',
       description: 'Create scripts, captions, and ideas with GPT-4',
       icon: Lightbulb,
       href: '/app/content',
@@ -139,12 +139,12 @@ export function Dashboard() {
       features: ['Trending Topics', 'Niche Analysis', 'Content Opportunities', 'Market Insights']
     },
     {
-      title: 'Campaign Marketplace',
-      description: 'Connect with brands and monetize content',
+      title: 'ATS Resume Checker',
+      description: 'Analyze your resume against job descriptions',
       icon: Briefcase,
       href: '/app/campaigns',
       color: 'from-gray-800 via-white to-gray-700',
-      features: ['Brand Partnerships', 'Campaign Applications', 'Revenue Opportunities', 'Creator Network']
+      features: ['ATS Score', 'Keyword Matching', 'Improvement Suggestions', 'Refined Resume PDF']
     },
   ];
 
@@ -268,7 +268,7 @@ export function Dashboard() {
                   Demo Mode Active
                 </h3>
                 <p className="text-xs text-gray-600">
-                  You're exploring CreatorCopilot in demo mode. Features are locked - sign up to unlock everything!
+                  You're exploring CareerCraft in demo mode. Features are locked - sign up to unlock everything!
                 </p>
               </div>
             </div>
@@ -370,7 +370,7 @@ export function Dashboard() {
           <h1 className="text-3xl font-bold text-white">
             Welcome back, {profile?.full_name?.split(' ')[0] || 'Creator'}!
           </h1>
-          <p className="text-gray-400 mt-1">Here's your CreatorCopilot dashboard.</p>
+          <p className="text-gray-400 mt-1">Here's your CareerCraft dashboard.</p>
         </div>
         {!profile?.is_pro && (
           <motion.button
@@ -649,7 +649,7 @@ export function Dashboard() {
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                New to CreatorCopilot? Start here!
+                New to CareerCraft? Start here!
               </h3>
               <p className="text-gray-600 mb-4">
                 Follow these steps to get the most out of your AI-powered creator toolkit.

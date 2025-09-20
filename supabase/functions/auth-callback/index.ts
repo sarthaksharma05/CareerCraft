@@ -214,7 +214,7 @@ serve(async (req) => {
             </svg>
             <h1>Authentication Successful!</h1>
             <p>Your ${platform} account has been connected successfully.</p>
-            <p>You can close this window and return to CreatorCopilot.</p>
+            <p>You can close this window and return to CareerCraft
           </div>
           <script>
             // Close the window after 3 seconds

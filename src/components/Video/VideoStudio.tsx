@@ -408,7 +408,7 @@ export function VideoStudio() {
                 </div>
                 <div className="flex items-start space-x-3">
                   <input type="checkbox" id="updates" className="mt-1" defaultChecked />
-                  <label htmlFor="updates" className="text-sm text-gray-600">Also send me updates about new features and improvements to CreatorCopilot</label>
+                  <label htmlFor="updates" className="text-sm text-gray-600">Also send me updates about new features and improvements to CareerCraft</label>
                 </div>
               </div>
               <div className="flex space-x-3">

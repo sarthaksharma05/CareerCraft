@@ -13,7 +13,7 @@ export function PricingPage() {
       description: 'Perfect for new creators getting started',
       price: { monthly: 0, annual: 0 },
       features: [
-        '5 AI content generations per month',
+        '5 Smart Formating s per month',
         '2 voiceover minutes per month',
         'Basic trend insights',
         'Community support',
@@ -28,7 +28,7 @@ export function PricingPage() {
       description: 'For serious creators ready to scale',
       price: { monthly: 29, annual: 290 },
       features: [
-        'Unlimited AI content generation',
+        'Unlimited Smart Formating ',
         '60 voiceover minutes per month',
         'Advanced trend analysis',
         'Priority support',
@@ -80,8 +80,8 @@ export function PricingPage() {
       answer: 'Yes! All paid plans come with a 14-day free trial. No credit card required to start.'
     },
     {
-      question: 'Can I use CreatorCopilot for commercial purposes?',
-      answer: 'Absolutely! All content generated with CreatorCopilot can be used for commercial purposes without any additional licensing fees.'
+      question: 'Can I use CareerCraft for commercial purposes?',
+      answer: 'Absolutely! All content generated with CareerCraft can be used for commercial purposes without any additional licensing fees.'
     }
   ];
 
@@ -222,7 +222,7 @@ export function PricingPage() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl font-bold text-white mb-6">Why Choose CreatorCopilot?</h2>
+            <h2 className="text-4xl font-bold text-white mb-6">Why Choose CareerCraft?</h2>
             <p className="text-xl text-purple-200 max-w-3xl mx-auto">
               We're not just another AI tool. We're your creative partner, designed specifically for content creators.
             </p>
@@ -270,7 +270,7 @@ export function PricingPage() {
               <Star className="h-12 w-12 text-purple-400 mx-auto mb-6" />
               <h3 className="text-2xl font-bold text-white mb-4">Creator-Focused</h3>
               <p className="text-purple-200">
-                Built by creators, for creators. Every feature is designed to solve real content creation challenges.
+                Built by creators, for creators. Every feature is designed to solve real Smart Formating  challenges.
               </p>
             </motion.div>
           </div>
@@ -325,7 +325,7 @@ export function PricingPage() {
               Ready to Transform Your Content?
             </h2>
             <p className="text-xl text-purple-200 mb-8">
-              Join thousands of creators who are already using CreatorCopilot to scale their content and grow their audience.
+              Join thousands of creators who are already using CareerCraft to scale their content and grow their audience.
             </p>
             <Link
               to="/"

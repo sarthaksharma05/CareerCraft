@@ -25,7 +25,7 @@ export function AIChatWidget({ isOpen, onToggle }: AIChatWidgetProps) {
     {
       id: '1',
       type: 'ai',
-      content: 'Hi! I\'m your AI assistant. I can help you learn about CreatorCopilot, generate content ideas, or answer any questions you have. How can I help you today?',
+      content: 'Hi! I\'m your AI assistant. I can help you learn about CareerCraft, generate content ideas, or answer any questions you have. How can I help you today?',
       timestamp: new Date()
     }
   ]);
@@ -92,17 +92,17 @@ export function AIChatWidget({ isOpen, onToggle }: AIChatWidgetProps) {
 
   const generateAIResponse = async (userMessage: string): Promise<string> => {
     // Create a context-aware prompt for the AI
-    const systemPrompt = `You are an AI assistant for CreatorCopilot, a comprehensive AI-powered content creation platform. 
+    const systemPrompt = `You are an AI assistant for CareerCraft, a comprehensive AI-powered Smart Formating  platform. 
 
-CreatorCopilot offers:
-- AI Content Generation (scripts, captions, hashtags, ideas)
+CareerCraft offers:
+- Smart Formating  (scripts, captions, hashtags, ideas)
 - Professional Voiceovers with ElevenLabs
 - AI Video Creation with Tavus avatars
 - TrendRadar for discovering trending topics
 - Campaign Marketplace for brand partnerships
 - Analytics and insights
 
-You should be helpful, friendly, and knowledgeable about content creation, social media, and the creator economy. Keep responses conversational and under 150 words. If users ask about features, explain how CreatorCopilot can help them.`;
+You should be helpful, friendly, and knowledgeable about Smart Formating , social media, and the creator economy. Keep responses conversational and under 150 words. If users ask about features, explain how CareerCraft can help them.`;
 
     try {
       // Use Gemini to generate contextual response
@@ -110,13 +110,13 @@ You should be helpful, friendly, and knowledgeable about content creation, socia
         'answer', 
         'general', 
         'chat', 
-        `System: ${systemPrompt}\n\nUser: ${userMessage}\n\nRespond as the CreatorCopilot AI assistant:`
+        `System: ${systemPrompt}\n\nUser: ${userMessage}\n\nRespond as the CareerCraft AI assistant:`
       );
       
-      return response || "I'd be happy to help you with that! CreatorCopilot has many features that can boost your content creation. What specific area would you like to explore?";
+      return response || "I'd be happy to help you with that! CareerCraft has many features that can boost your Smart Formating . What specific area would you like to explore?";
     } catch (error) {
       console.error('Error calling Gemini API:', error);
-      return "I'd be happy to help you with CreatorCopilot! Our platform offers AI content generation, voiceovers, video creation, and trend analysis. What would you like to know more about?";
+      return "I'd be happy to help you with CareerCraft! Our platform offers Smart Formating , voiceovers, video creation, and trend analysis. What would you like to know more about?";
     }
   };
 
@@ -226,7 +226,7 @@ You should be helpful, friendly, and knowledgeable about content creation, socia
           </button>
         </form>
         <p className="text-center text-xs text-white/40 mt-2">
-          Powered by CreatorCopilot AI
+          Powered by CareerCraft AI
         </p>
       </div>
     </motion.div>

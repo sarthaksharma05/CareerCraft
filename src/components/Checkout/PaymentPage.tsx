@@ -63,7 +63,7 @@ export function PaymentPage() {
           <div>
             <div className="flex items-center mb-8">
               <Sparkles className="w-8 h-8 mr-3 text-white bg-clip-text text-transparent bg-gradient-to-br from-purple-400 to-pink-600" />
-              <span className="font-bold text-lg">CreatorCopilot</span>
+              <span className="font-bold text-lg">CareerCraft</span>
             </div>
             <div className="mb-8">
               <div className="text-lg">Subscribe to <span className="font-bold">{selected.name} Plan</span></div>
@@ -86,7 +86,7 @@ export function PaymentPage() {
               </div>
             </div>
           </div>
-          <div className="text-xs text-zinc-400 mt-8">By confirming your subscription, you allow CreatorCopilot to charge you for future payments in accordance with their terms. You can always cancel your subscription.</div>
+          <div className="text-xs text-zinc-400 mt-8">By confirming your subscription, you allow CareerCraft to charge you for future payments in accordance with their terms. You can always cancel your subscription.</div>
         </div>
         {/* Right: Payment Form */}
         <div className="w-1/2 bg-white p-10 flex flex-col justify-center">

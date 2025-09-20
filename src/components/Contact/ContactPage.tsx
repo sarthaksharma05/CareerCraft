@@ -120,7 +120,7 @@ export function ContactPage() {
               </span>
             </h1>
             <p className="text-xl text-purple-200 max-w-3xl mx-auto leading-relaxed">
-              Have questions about CreatorCopilot? Want to share feedback? We'd love to hear from you. 
+              Have questions about CareerCraft? Want to share feedback? We'd love to hear from you. 
               Our team is here to help you succeed.
             </p>
           </motion.div>
@@ -345,8 +345,8 @@ export function ContactPage() {
               Ready to Get Started?
             </h2>
             <p className="text-xl text-purple-200 mb-8">
-              Don't wait to transform your content creation process. Join thousands of creators 
-              who are already using CreatorCopilot to scale their success.
+              Don't wait to transform your Smart Formating  process. Join thousands of creators 
+              who are already using CareerCraft to scale their success.
             </p>
             <Link
               to="/"

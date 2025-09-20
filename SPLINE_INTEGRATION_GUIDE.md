@@ -1,7 +1,7 @@
-# Spline 3D Integration Guide for CreatorCopilot
+# Spline 3D Integration Guide for CareerCraft
 
 ## 🎯 Overview
-This guide will help you integrate Spline 3D scenes into your CreatorCopilot landing page to create an immersive and interactive experience.
+This guide will help you integrate Spline 3D scenes into your CareerCraft landing page to create an immersive and interactive experience.
 
 ## 📦 What's Already Set Up
 
@@ -60,7 +60,7 @@ Edit `src/components/Landing/LandingPage.tsx`:
 />
 ```
 
-## 🎨 Scene Ideas for CreatorCopilot
+## 🎨 Scene Ideas for CareerCraft
 
 ### 1. Hero Scene (`interactiveHero`)
 - **Concept**: Floating AI icons (brain, microphone, video camera)
@@ -196,4 +196,4 @@ const CustomLoader = () => (
 - Review the [Spline examples](https://spline.design/examples)
 - Join the [Spline community](https://discord.gg/spline)
 
-Your CreatorCopilot landing page is now ready for amazing 3D experiences! 🚀 
+Your CareerCraft landing page is now ready for amazing 3D experiences! 🚀 

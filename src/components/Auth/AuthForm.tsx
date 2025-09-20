@@ -38,7 +38,7 @@ export function AuthForm({ onBack, onSuccess }: AuthFormProps) {
         // After successful signup, try to sign in the user
         try {
           await signIn(data.email, data.password);
-          toast.success('Account created successfully! Welcome to CreatorCopilot!');
+          toast.success('Account created successfully! Welcome to CareerCraft!');
           localStorage.removeItem('isDemoUser');
           navigate('/app/dashboard');
         } catch (signInError: any) {
@@ -54,8 +54,8 @@ export function AuthForm({ onBack, onSuccess }: AuthFormProps) {
         }
       } else {
         await signIn(data.email, data.password);
-        toast.success('Welcome back to CreatorCopilot!');
-        if (data.email === 'demo@creatorcopilot.com') {
+        toast.success('Welcome back to CareerCraft!');
+        if (data.email === 'demo@CareerCraft.com') {
           localStorage.setItem('isDemoUser', 'true');
         } else {
           localStorage.removeItem('isDemoUser');
@@ -179,7 +179,7 @@ export function AuthForm({ onBack, onSuccess }: AuthFormProps) {
             </h2>
             <p className="text-gray-200">
               {isSignUp 
-                ? 'Join CreatorCopilot and start your AI-powered creator journey' 
+                ? 'Join CareerCraft and start your AI-powered creator journey' 
                 : 'Sign in to access your creative workspace'
               }
             </p>

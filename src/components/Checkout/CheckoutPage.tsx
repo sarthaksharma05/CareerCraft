@@ -46,7 +46,7 @@ const plans = [
     monthlyPrice: 29,
     yearlyPrice: 290,
     features: [
-      'Unlimited AI content generation',
+      'Unlimited Smart Formating ',
       '60 voiceover minutes per month',
       'AI video creation (10 videos/month)',
       'Advanced trend analysis',
@@ -198,7 +198,7 @@ export function CheckoutPage() {
               <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl">
                 <Crown className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">CreatorCopilot Checkout</span>
+              <span className="text-xl font-bold text-white">CareerCraft Checkout</span>
             </div>
           </div>
         </div>

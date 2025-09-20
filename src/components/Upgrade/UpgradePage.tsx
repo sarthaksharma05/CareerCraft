@@ -13,7 +13,7 @@ export function UpgradePage() {
       description: 'Perfect for new creators getting started',
       price: { monthly: 0, annual: 0 },
       features: [
-        '5 AI content generations per month',
+        '5 Smart Formating s per month',
         '2 voiceover minutes per month',
         'Basic trend insights',
         'Community support',
@@ -28,7 +28,7 @@ export function UpgradePage() {
       description: 'For serious creators ready to scale',
       price: { monthly: 29, annual: 290 },
       features: [
-        'Unlimited AI content generation',
+        'Unlimited Smart Formating ',
         '60 voiceover minutes per month',
         'Advanced trend analysis',
         'Priority support',

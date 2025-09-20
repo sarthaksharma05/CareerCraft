@@ -76,11 +76,11 @@ export function AboutPage() {
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               About
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {' '}CreatorCopilot
+                {' '}CareerCraft
               </span>
             </h1>
             <p className="text-xl text-purple-200 max-w-3xl mx-auto leading-relaxed">
-              We're on a mission to democratize content creation by putting the power of AI 
+              We're on a mission to democratize Smart Formating  by putting the power of AI 
               in the hands of every creator, helping them build authentic connections with their audience.
             </p>
           </motion.div>
@@ -125,7 +125,7 @@ export function AboutPage() {
                 that everyone has a story worth telling and an audience waiting to hear it.
               </p>
               <p className="text-lg text-purple-200 leading-relaxed">
-                CreatorCopilot was born from the vision of making professional-grade content creation 
+                CareerCraft was born from the vision of making professional-grade Smart Formating  
                 tools accessible to everyone, regardless of their technical background or budget. 
                 We're not just building software; we're building the future of creative expression.
               </p>

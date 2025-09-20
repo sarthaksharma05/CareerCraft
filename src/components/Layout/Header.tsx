@@ -36,7 +36,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
   // List of searchable pages
   const searchPages = [
-    { name: 'AI Content Generator', path: '/app/content' },
+    { name: 'Smart Formating ', path: '/app/content' },
     { name: 'Voiceover Studio', path: '/app/voiceovers' },
     { name: 'AI Video Creator', path: '/app/videos' },
     { name: 'TrendRadar', path: '/app/trends' },
